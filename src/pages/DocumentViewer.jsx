@@ -331,6 +331,22 @@ export default function Page() {
     });
   };
  
+  const handleRotateLeft = (index) => {
+    setDocUrl(prevUrls => {
+        const newUrls = [...prevUrls];
+        newUrls[index].rotationAngle = (newUrls[index].rotationAngle || 0) - 45; // Rotate left by 45 degrees for JPEG/PNG
+        return newUrls;
+    });
+  };
+
+  const handleRotateRight = (index) => {
+    setDocUrl(prevUrls => {
+        const newUrls = [...prevUrls];
+        newUrls[index].rotationAngle = (newUrls[index].rotationAngle || 0) + 45; // Rotate right by 45 degrees for JPEG/PNG
+        return newUrls;
+    });
+  };
+ 
   const handleSortChange = (event) => {
     const sortOption = event.target.value;
     let sortedDocs;
@@ -484,9 +500,36 @@ export default function Page() {
                                 <button onClick={() => handleZoomOut(index)} className="zoom-btn">-</button>
                                 <button onClick={() => handleZoomReset(index)} className="zoom-btn">Reset</button>
                                 <button onClick={() => handleZoomIn(index)} className="zoom-btn">+</button>
+                                <button onClick={() => handleRotateLeft(index)} className="zoom-btn">Rotate Left</button>
+                                <button onClick={() => handleRotateRight(index)} className="zoom-btn">Rotate Right</button>
                                 <span>{Math.round(docItem.zoomLevel * 100)}%</span>
                             </div>
-                            <TiffViewer tiffUrl={docItem.url} scale={docItem.zoomLevel * (docUrls.length === 1 ? 1.5 : 0.5)}/>
+                            <TiffViewer tiffUrl={docItem.url} scale={docItem.zoomLevel * (docUrls.length === 1 ? 1.5 : 0.5)} rotationAngle={docItem.rotationAngle || 0}/>
+                        </div>
+                    ) : (docItem.contentType === "image/jpeg" || docItem.contentType === "image/png") ? (
+                        <div className="viewer-container">
+                            <div className="zoom-controls">
+                                <button onClick={() => handleZoomOut(index)} className="zoom-btn">-</button>
+                                <button onClick={() => handleZoomReset(index)} className="zoom-btn">Reset</button>
+                                <button onClick={() => handleZoomIn(index)} className="zoom-btn">+</button>
+                                <button onClick={() => handleRotateLeft(index)} className="zoom-btn">Rotate Left</button>
+                                <button onClick={() => handleRotateRight(index)} className="zoom-btn">Rotate Right</button>
+                                <span>{Math.round(docItem.zoomLevel * 100)}%</span>
+                            </div>
+                            <Frame>
+                                <img
+                                    onContextMenu={handleContext}
+                                    draggable="false"
+                                    style={{
+                                        width: "-webkit-fill-available",
+                                        transform: `scale(${docItem.zoomLevel}) rotate(${docItem.rotationAngle || 0}deg)`,
+                                        transformOrigin: 'center',
+                                        transition: 'transform 0.2s ease-in-out'
+                                    }}
+                                    className="jpg-document"
+                                    src={docItem.url}
+                                />
+                            </Frame>
                         </div>
                     ) : docItem.contentType === "application/pdf" ? (
                         <PdfViewer docUrl={docItem.url} scaleRatio={docUrls.length === 1 ? 1.5 : 0.5}/>
@@ -501,6 +544,8 @@ export default function Page() {
                                 <button onClick={() => handleZoomOut(index)} className="zoom-btn">-</button>
                                 <button onClick={() => handleZoomReset(index)} className="zoom-btn">Reset</button>
                                 <button onClick={() => handleZoomIn(index)} className="zoom-btn">+</button>
+                                <button onClick={() => handleRotateLeft(index)} className="zoom-btn">Rotate Left</button>
+                                <button onClick={() => handleRotateRight(index)} className="zoom-btn">Rotate Right</button>
                                 <span>{Math.round(docItem.zoomLevel * 100)}%</span>
                             </div>
                             <Frame>
@@ -509,7 +554,7 @@ export default function Page() {
                                     draggable="false"
                                     style={{
                                         width: "-webkit-fill-available",
-                                        transform: `scale(${docItem.zoomLevel})`,
+                                        transform: `scale(${docItem.zoomLevel}) rotate(${docItem.rotationAngle || 0}deg)`,
                                         transformOrigin: 'center',
                                         transition: 'transform 0.2s ease-in-out'
                                     }}
