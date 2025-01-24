@@ -10,7 +10,7 @@ import Header from "@/components/Header";
 import { getDocumentIcon } from "@/utils/reactIcons";
 import SearchWithSuggestions from "@/components/SearchWithSuggestions";
 import { LuCalendarArrowUp , LuCalendarArrowDown } from "react-icons/lu";
-import { FaRectangleList } from "react-icons/fa6";
+import { FaRectangleList, FaSort } from "react-icons/fa6";
 import { AiFillCloseSquare } from "react-icons/ai";
 import { MdSummarize } from "react-icons/md";
 import { HiDocument } from "react-icons/hi2";
@@ -372,12 +372,14 @@ export default function Page() {
                  </>
                 }
                 <div className="doc-head-wrapper">
-                  <p className="doc-text"><FaRectangleList/>DOCUMENTS </p>
+                  <label htmlFor="sortOptions" className="sort-label">
+                    <FaSort style={{ marginRight: '5px' }} /> Sort By:
+                  </label>
                   <select id="sortOptions" onChange={handleSortChange} defaultValue="priority">
-                      <option value="dateAscending">Date Ascending</option>
-                      <option value="dateDescending">Date Descending</option>
-                      <option value="priority">Priority</option>
-                    </select>
+                    <option value="dateAscending">Date Ascending</option>
+                    <option value="dateDescending">Date Descending</option>
+                    <option value="priority">Priority</option>
+                  </select>
                 </div>
                 <div className="document-list">
                   {filteredDocs?.length >= 1

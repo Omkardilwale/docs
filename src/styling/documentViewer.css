@@ -479,33 +479,6 @@ button.closetab-btn svg {
 }
 
 
-/* src/pages/DocumentViewer.css */
-.doc-head-wrapper {
-  display: flex; /* Use flexbox for alignment */
-  align-items: center; /* Center items vertically */
-  justify-content: space-between; /* Space between text and dropdown */
-  margin: 10px 0; /* Margin for spacing */
-}
-
-.doc-text {
-  font-size: 16px; /* Font size for document text */
-  font-weight: bold; /* Bold text for emphasis */
-  display: flex; /* Flexbox for icon alignment */
-  align-items: center; /* Center icon and text */
-}
-
-.doc-text svg {
-  margin-right: 5px; /* Space between icon and text */
-}
-
-#sortOptions {
-  padding: 3px; /* Reduced padding for compactness */
-  border: 1px solid #ccc; /* Border for dropdown */
-  border-radius: 4px; /* Rounded corners */
-  font-size: 12px; /* Smaller font size for compactness */
-  cursor: pointer; /* Change cursor to pointer */
-  width: 80px; /* Set a fixed width for consistency */
-}
 ::-webkit-scrollbar {
   display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
 }
@@ -523,4 +496,46 @@ button.closetab-btn svg {
 .tooltip-trigger {
   cursor: pointer;
   position: relative;
+}
+
+
+
+/* src/styling/documentViewer.css */
+.doc-head-wrapper {
+  display: flex; /* Use flexbox for alignment */
+  align-items: center; /* Center items vertically */
+  margin: 10px 0; /* Margin for spacing */
+}
+
+.sort-label {
+  font-size: 14px; /* Font size for the label */
+  font-weight: 600; /* Bold text for emphasis */
+  color: #333; /* Dark color for better readability */
+  display: flex; /* Use flexbox for alignment */
+  align-items: center; /* Center icon and text vertically */
+  margin-right: 10px; /* Space between label and dropdown */
+}
+
+.sort-label svg {
+  margin-right: 5px; /* Space between icon and text */
+  color: #2da3ee; /* Color for the icon */
+}
+
+#sortOptions {
+  padding: 8px; /* Increased padding for better touch targets */
+  border: 1px solid #ccc; /* Border for dropdown */
+  border-radius: 4px; /* Rounded corners */
+  font-size: 14px; /* Font size for dropdown */
+  cursor: pointer; /* Change cursor to pointer */
+  width: 150px; /* Set a fixed width for consistency */
+  transition: border-color 0.3s; /* Smooth transition for border color */
+}
+
+#sortOptions:focus {
+  border-color: #2da3ee; /* Change border color on focus */
+  outline: none; /* Remove default outline */
+}
+
+#sortOptions option {
+  padding: 8px; /* Padding for options */
 }
