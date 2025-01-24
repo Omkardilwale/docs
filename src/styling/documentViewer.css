@@ -51,10 +51,9 @@
   }
    
   .sidebar {
-    width: 25%;
+    /* width: 25%; */
     padding: 0 10px;
     background-color: #f4f4f4;
-    border: 1px solid #ddd;
     position: relative;
     overflow-y: scroll;
     white-space: nowrap;
