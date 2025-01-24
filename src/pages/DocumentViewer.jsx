@@ -306,6 +306,27 @@ export default function Page() {
     setZoomLevel(1);
   };
  
+  const handleSortChange = (event) => {
+    const sortOption = event.target.value;
+    let sortedDocs;
+
+    switch (sortOption) {
+      case 'dateAscending':
+        sortedDocs = [...documents].sort((a, b) => new Date(a.metaData.updatedAt) - new Date(b.metaData.updatedAt));
+        break;
+      case 'dateDescending':
+        sortedDocs = [...documents].sort((a, b) => new Date(b.metaData.updatedAt) - new Date(a.metaData.updatedAt));
+        break;
+      case 'priority':
+        sortedDocs = [...documents].sort((a, b) => getPriorityOrder(a) - getPriorityOrder(b));
+        break;
+      default:
+        sortedDocs = documents; // No sorting
+    }
+
+    setDocuments(sortedDocs);
+  };
+ 
   return (
     <>
       <div className="app-container">
@@ -338,7 +359,11 @@ export default function Page() {
                 }
                 <div className="doc-head-wrapper">
                   <p className="doc-text"><FaRectangleList/>DOCUMENTS </p>
-                  <button className="sort-btn" onClick={() => { sortDocuments() }}>SORT BY {isAscending ? <LuCalendarArrowDown /> : <LuCalendarArrowUp />}</button>
+                  <select id="sortOptions" onChange={handleSortChange} defaultValue="priority">
+                      <option value="dateAscending">Date Ascending</option>
+                      <option value="dateDescending">Date Descending</option>
+                      <option value="priority">Priority</option>
+                    </select>
                 </div>
                 <div className="document-list">
                   {filteredDocs?.length >= 1

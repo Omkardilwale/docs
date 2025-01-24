@@ -52,7 +52,7 @@
    
   .sidebar {
     width: 25%;
-    padding: 0 20px;
+    padding: 0 10px;
     background-color: #f4f4f4;
     border: 1px solid #ddd;
     position: relative;
@@ -476,4 +476,36 @@ button.closetab-btn svg {
     min-width: 40px;
     padding: 2px 4px;
   }
+}
+
+
+/* src/pages/DocumentViewer.css */
+.doc-head-wrapper {
+  display: flex; /* Use flexbox for alignment */
+  align-items: center; /* Center items vertically */
+  justify-content: space-between; /* Space between text and dropdown */
+  margin: 10px 0; /* Margin for spacing */
+}
+
+.doc-text {
+  font-size: 16px; /* Font size for document text */
+  font-weight: bold; /* Bold text for emphasis */
+  display: flex; /* Flexbox for icon alignment */
+  align-items: center; /* Center icon and text */
+}
+
+.doc-text svg {
+  margin-right: 5px; /* Space between icon and text */
+}
+
+#sortOptions {
+  padding: 3px; /* Reduced padding for compactness */
+  border: 1px solid #ccc; /* Border for dropdown */
+  border-radius: 4px; /* Rounded corners */
+  font-size: 12px; /* Smaller font size for compactness */
+  cursor: pointer; /* Change cursor to pointer */
+  width: 150px; /* Set a fixed width for consistency */
+}
+::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
 }
