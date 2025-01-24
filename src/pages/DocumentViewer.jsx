@@ -88,6 +88,7 @@ export default function Page() {
       const getPriorityOrder = (doc) => {
         const docType = doc.metaData?.docType?.toUpperCase();
         const docName = doc.metaData?.docName?.toUpperCase();
+        const contentType = doc.metaData?.contentType;
         
         // Priority order (from highest to lowest):
         // 1. Application Form
@@ -96,15 +97,17 @@ export default function Page() {
         // 4. INCOME
         // 5. AML
         // 6. All remaining documents
+        // 7. image/tiff documents (absolute lowest priority)
         
+        if (contentType === 'image/tiff') return 1000; // Absolute last priority
         if (docType?.includes('APPLICATION FORM') || docName?.includes('APPLICATION FORM')) return 1;
         if (docType?.includes('SIS') || docName?.includes('SIS')) return 2;
         if (docType?.includes('KYC') || docName?.includes('KYC')) return 3;
         if (docType?.includes('INCOME') || docName?.includes('INCOME')) return 4;
         if (docType?.includes('AML') || docName?.includes('AML')) return 5;
         
-        // All remaining documents will be shown at the end, sorted by date
-        return Number.MAX_SAFE_INTEGER;
+        // All remaining non-TIFF documents
+        return 100;
       };
  
       const sortedDocs = [...data.documents].sort((a, b) => {
