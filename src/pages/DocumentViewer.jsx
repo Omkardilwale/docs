@@ -69,47 +69,47 @@ export default function Page() {
     }
   };
  
+  // New priority sorting function
+  const getPriorityOrder = (doc) => {
+    const docType = doc.metaData?.docType?.toUpperCase();
+    const docName = doc.metaData?.docName?.toUpperCase();
+    const contentType = doc.metaData?.contentType;
+    
+    // Priority order (from highest to lowest):
+    // 1. Application Form
+    // 2. SIS
+    // 3. KYC
+    // 4. INCOME
+    // 5. AML
+    // 6. All remaining documents
+    // 7. image/tiff documents (absolute lowest priority)
+    
+    if (contentType === 'image/tiff') return 1000; // Absolute last priority
+    if (docType?.includes('APPLICATION FORM') || docName?.includes('APPLICATION FORM')) return 1;
+    if (docType?.includes('SIS') || docName?.includes('SIS')) return 2;
+    if (docType?.includes('KYC') || docName?.includes('KYC')) return 3;
+    if (docType?.includes('INCOME') || docName?.includes('INCOME')) return 4;
+    if (docType?.includes('AML') || docName?.includes('AML')) return 5;
+    
+    // All remaining non-TIFF documents
+    return 100;
+  };
+ 
   const handleSearch = async (policyNumFromUrl) => {
-    setDocUrl([])
-    setSelectedDocId(null)
+    setDocUrl([]);
+    setSelectedDocId(null);
     setDocuments([]);
-    const policyNumber = policyNumFromUrl?policyNumFromUrl:searchQuery
-    sessionStorage.setItem("proposalNo",policyNumber)
-    if(policyNumber.length==0){
-      setShowPopup(true)
-      return
+    const policyNumber = policyNumFromUrl ? policyNumFromUrl : searchQuery;
+    sessionStorage.setItem("proposalNo", policyNumber);
+    if (policyNumber.length === 0) {
+      setShowPopup(true);
+      return;
     }
     setLoading(true);
  
     try {
       const data = await fetchDocuments(policyNumber);
       
-      // New priority sorting function
-      const getPriorityOrder = (doc) => {
-        const docType = doc.metaData?.docType?.toUpperCase();
-        const docName = doc.metaData?.docName?.toUpperCase();
-        const contentType = doc.metaData?.contentType;
-        
-        // Priority order (from highest to lowest):
-        // 1. Application Form
-        // 2. SIS
-        // 3. KYC
-        // 4. INCOME
-        // 5. AML
-        // 6. All remaining documents
-        // 7. image/tiff documents (absolute lowest priority)
-        
-        if (contentType === 'image/tiff') return 1000; // Absolute last priority
-        if (docType?.includes('APPLICATION FORM') || docName?.includes('APPLICATION FORM')) return 1;
-        if (docType?.includes('SIS') || docName?.includes('SIS')) return 2;
-        if (docType?.includes('KYC') || docName?.includes('KYC')) return 3;
-        if (docType?.includes('INCOME') || docName?.includes('INCOME')) return 4;
-        if (docType?.includes('AML') || docName?.includes('AML')) return 5;
-        
-        // All remaining non-TIFF documents
-        return 100;
-      };
- 
       const sortedDocs = [...data.documents].sort((a, b) => {
         const priorityA = getPriorityOrder(a);
         const priorityB = getPriorityOrder(b);
@@ -125,10 +125,10 @@ export default function Page() {
       });
  
       setDocuments(sortedDocs || []);
-      if (data._status.code == 1 || data.documents.length == 0) {
-        setShowPopup(true)
+      if (data._status.code === 1 || data.documents.length === 0) {
+        setShowPopup(true);
       }
-      setFilteredDocs([])
+      setFilteredDocs([]);
       console.log(sortedDocs, "sorted");
     } catch (e) {
       console.error("Error fetching documents:", e);
