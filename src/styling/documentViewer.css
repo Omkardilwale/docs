@@ -158,7 +158,7 @@
   }
    
   .document-item {
-    padding: 12px;
+    padding: 5px;
     border-bottom: 1px solid #ddd;
     cursor: pointer;
     display: flex;
@@ -508,4 +508,19 @@ button.closetab-btn svg {
 }
 ::-webkit-scrollbar {
   display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+}
+
+/* Add to your CSS file */
+.custom-tooltip {
+  z-index: 9999 !important;
+  background-color: #333 !important;
+  color: white !important;
+  padding: 8px !important;
+  border-radius: 4px !important;
+  font-size: 12px !important;
+}
+
+.tooltip-trigger {
+  cursor: pointer;
+  position: relative;
 }

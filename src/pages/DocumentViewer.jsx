@@ -18,6 +18,7 @@ import NavigationBar from "@/components/NavigationBar";
 import TiffViewer from "@/components/TiffViewer";
 import PdfViewer from "@/components/PdfViewer";
 import {documentContentTypeStyle} from '../styling/inlineCSS'
+import CustomTooltip from "@/components/CustomTooltip";
  
 export default function Page() {
   const [leftCollapsed, setLeftCollapsed] = useState(false);
@@ -38,6 +39,9 @@ export default function Page() {
   const [isAscending , setIsDescending] = useState(true)
   const [contentType , setContentType] = useState(null)
   const [zoomLevel, setZoomLevel] = useState(1);
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [tooltipContent, setTooltipContent] = useState('');
+  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
   const router = useRouter();
  
   const styles = {
@@ -327,6 +331,16 @@ export default function Page() {
     setDocuments(sortedDocs);
   };
  
+  const handleMouseEnter = (doc, e) => {
+    setTooltipContent(`Form ID: ${doc.metaData?.FormID || doc.metaData?.formID}<br />Date: ${formatDDMMYYHHMMSS(doc.metaData.updatedAt)}`);
+    setTooltipVisible(true);
+    setTooltipPosition({ top: e.clientY + 10, left: e.clientX + 10 });
+  };
+
+  const handleMouseLeave = () => {
+    setTooltipVisible(false);
+  };
+ 
   return (
     <>
       <div className="app-container">
@@ -372,14 +386,18 @@ export default function Page() {
                         className={`document-item ${selectedDocId === doc.docId ? "highlighted" : ""}`}
                         key={index}
                         onClick={() => handleDocumentClick(doc)}
+                        onMouseEnter={(e) => handleMouseEnter(doc, e)}
+                        onMouseLeave={handleMouseLeave}
                       >
                         <div className="doc-details">
-                        <div className="doc-icon"><p className="doc-type">{getDocumentIcon(doc)}{doc.metaData?.docType}</p><p style={{fontSize:"12px"}}>{doc.metaData?.FormID || doc.metaData?.formID}</p></div>                         
+                        <div className="doc-icon"><p className="doc-type">{getDocumentIcon(doc)}{doc.metaData?.docType}</p>/
+                        {/* <p style={{fontSize:"12px"}}>{doc.metaData?.FormID || doc.metaData?.formID}</p> */}
+                        </div>                         
                         <div className="d-d-lower-pallet">
                             <p className="doc-content-type" style={documentContentTypeStyle(doc.metaData?.docName)}>
                               {doc.metaData?.docName}
                             </p>
-                            <p className="d-d-date">{formatDDMMYYHHMMSS(doc.metaData.updatedAt)}</p>
+                            {/* <p className="d-d-date">{formatDDMMYYHHMMSS(doc.metaData.updatedAt)}</p> */}
                           </div>  
                         </div>
                       </div>
@@ -389,14 +407,18 @@ export default function Page() {
                         className={`document-item ${selectedDocId === doc.docId ? "highlighted" : ""}`}
                         key={index}
                         onClick={() => handleDocumentClick(doc)}
+                        onMouseEnter={(e) => handleMouseEnter(doc, e)}
+                        onMouseLeave={handleMouseLeave}
                       >
                         <div className="doc-details">
-                          <div className="doc-icon"><p className="doc-type">{getDocumentIcon(doc)}{doc.metaData?.docType}</p><p style={{fontSize:"12px"}}>{doc.metaData?.FormID || doc.metaData?.formID}</p></div>
+                          <div className="doc-icon"><p className="doc-type">{getDocumentIcon(doc)}{doc.metaData?.docType}</p>
+                          {/* <p style={{fontSize:"12px"}}>{doc.metaData?.FormID || doc.metaData?.formID}</p> */}
+                          </div>
                           <div className="d-d-lower-pallet">
                             <p className="doc-content-type" style={documentContentTypeStyle(doc.metaData?.docName)}>
                               {doc.metaData?.docName}
                             </p>
-                            <p className="d-d-date">{formatDDMMYYHHMMSS(doc.metaData.updatedAt)}</p>
+                            {/* <p className="d-d-date">{formatDDMMYYHHMMSS(doc.metaData.updatedAt)}</p> */}
                           </div>                         
                         </div>
                       </div>
@@ -489,7 +511,7 @@ export default function Page() {
       {showPopup &&
         <AlertPopup close={closePopup} title={"No Documents Found"} msg={"We couldn't find any documents to display. Please try again."} />
       }
- 
+      <CustomTooltip content={tooltipContent} visible={tooltipVisible} position={tooltipPosition} />
     </>
   );
 }

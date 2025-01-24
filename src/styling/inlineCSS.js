@@ -9,7 +9,7 @@ return({
     color: "white",
     opacity: 0.7,
     border: "1px solid",
-    fontSize: "10px",
+    fontSize: "8px",
     marginLeft: "16px"
 })
 }
