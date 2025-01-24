@@ -10,7 +10,7 @@ import Header from "@/components/Header";
 import { getDocumentIcon } from "@/utils/reactIcons";
 import SearchWithSuggestions from "@/components/SearchWithSuggestions";
 import { LuCalendarArrowUp , LuCalendarArrowDown } from "react-icons/lu";
-import { FaRectangleList, FaSort } from "react-icons/fa6";
+import { FaRectangleList, FaSort ,FaArrowRotateLeft,FaArrowRotateRight } from "react-icons/fa6";
 import { AiFillCloseSquare } from "react-icons/ai";
 import { MdSummarize } from "react-icons/md";
 import { HiDocument } from "react-icons/hi2";
@@ -500,8 +500,8 @@ export default function Page() {
                                 <button onClick={() => handleZoomOut(index)} className="zoom-btn">-</button>
                                 <button onClick={() => handleZoomReset(index)} className="zoom-btn">Reset</button>
                                 <button onClick={() => handleZoomIn(index)} className="zoom-btn">+</button>
-                                <button onClick={() => handleRotateLeft(index)} className="zoom-btn">Rotate Left</button>
-                                <button onClick={() => handleRotateRight(index)} className="zoom-btn">Rotate Right</button>
+                                <button onClick={() => handleRotateLeft(index)} className="zoom-btn"><FaArrowRotateLeft/></button>
+                                <button onClick={() => handleRotateRight(index)} className="zoom-btn"><FaArrowRotateRight/></button>
                                 <span>{Math.round(docItem.zoomLevel * 100)}%</span>
                             </div>
                             <TiffViewer tiffUrl={docItem.url} scale={docItem.zoomLevel * (docUrls.length === 1 ? 1.5 : 0.5)} rotationAngle={docItem.rotationAngle || 0}/>
@@ -512,8 +512,8 @@ export default function Page() {
                                 <button onClick={() => handleZoomOut(index)} className="zoom-btn">-</button>
                                 <button onClick={() => handleZoomReset(index)} className="zoom-btn">Reset</button>
                                 <button onClick={() => handleZoomIn(index)} className="zoom-btn">+</button>
-                                <button onClick={() => handleRotateLeft(index)} className="zoom-btn">Rotate Left</button>
-                                <button onClick={() => handleRotateRight(index)} className="zoom-btn">Rotate Right</button>
+                                <button onClick={() => handleRotateLeft(index)} className="zoom-btn"><FaArrowRotateLeft/></button>
+                                <button onClick={() => handleRotateRight(index)} className="zoom-btn"><FaArrowRotateRight/></button>
                                 <span>{Math.round(docItem.zoomLevel * 100)}%</span>
                             </div>
                             <Frame>
