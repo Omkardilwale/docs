@@ -141,13 +141,14 @@ export default function Page() {
     }
   };
  
-  const manageUrls = (newUrl, contentType,docName) => {
+  const manageUrls = (newUrl, contentType, docName) => {
     setDocUrl((prevUrls) => {
         if (prevUrls.length === 0) {
             return [{
                 url: newUrl,
                 contentType: contentType,
-                docName:docName
+                docName: docName,
+                zoomLevel: 1
             }];
         } else {
             return [
@@ -155,7 +156,8 @@ export default function Page() {
                 {
                     url: newUrl,
                     contentType: contentType,
-                    docName:docName
+                    docName: docName,
+                    zoomLevel: 1
                 }
             ];
         }
@@ -305,16 +307,28 @@ export default function Page() {
     setDocUrl((prevUrls)=>docUrls.filter((_,index)=>index!==indexToRemove))
   }
  
-  const handleZoomIn = () => {
-    setZoomLevel(prev => Math.min(prev + 0.25, 3)); // Max zoom 300%
+  const handleZoomIn = (index) => {
+    setDocUrl(prevUrls => {
+        const newUrls = [...prevUrls];
+        newUrls[index].zoomLevel = Math.min(newUrls[index].zoomLevel + 0.25, 3); // Max zoom 300%
+        return newUrls;
+    });
   };
  
-  const handleZoomOut = () => {
-    setZoomLevel(prev => Math.max(prev - 0.25, 0.25)); // Min zoom 25%
+  const handleZoomOut = (index) => {
+    setDocUrl(prevUrls => {
+        const newUrls = [...prevUrls];
+        newUrls[index].zoomLevel = Math.max(newUrls[index].zoomLevel - 0.25, 0.25); // Min zoom 25%
+        return newUrls;
+    });
   };
  
-  const handleZoomReset = () => {
-    setZoomLevel(1);
+  const handleZoomReset = (index) => {
+    setDocUrl(prevUrls => {
+        const newUrls = [...prevUrls];
+        newUrls[index].zoomLevel = 1; // Reset zoom level
+        return newUrls;
+    });
   };
  
   const handleSortChange = (event) => {
@@ -462,12 +476,12 @@ export default function Page() {
                     {docItem.contentType === "image/tiff" ? (
                         <div className="viewer-container">
                             <div className="zoom-controls">
-                                <button onClick={handleZoomOut} className="zoom-btn">-</button>
-                                <button onClick={handleZoomReset} className="zoom-btn">Reset</button>
-                                <button onClick={handleZoomIn} className="zoom-btn">+</button>
-                                <span>{Math.round(zoomLevel * 100)}%</span>
+                                <button onClick={() => handleZoomOut(index)} className="zoom-btn">-</button>
+                                <button onClick={() => handleZoomReset(index)} className="zoom-btn">Reset</button>
+                                <button onClick={() => handleZoomIn(index)} className="zoom-btn">+</button>
+                                <span>{Math.round(docItem.zoomLevel * 100)}%</span>
                             </div>
-                            <TiffViewer tiffUrl={docItem.url} scale={zoomLevel * (docUrls.length === 1 ? 1.5 : 0.5)}/>
+                            <TiffViewer tiffUrl={docItem.url} scale={docItem.zoomLevel * (docUrls.length === 1 ? 1.5 : 0.5)}/>
                         </div>
                     ) : docItem.contentType === "application/pdf" ? (
                         <PdfViewer docUrl={docItem.url} scaleRatio={docUrls.length === 1 ? 1.5 : 0.5}/>
@@ -479,10 +493,10 @@ export default function Page() {
                     ) : (
                         <div className="viewer-container">
                             <div className="zoom-controls">
-                                <button onClick={handleZoomOut} className="zoom-btn">-</button>
-                                <button onClick={handleZoomReset} className="zoom-btn">Reset</button>
-                                <button onClick={handleZoomIn} className="zoom-btn">+</button>
-                                <span>{Math.round(zoomLevel * 100)}%</span>
+                                <button onClick={() => handleZoomOut(index)} className="zoom-btn">-</button>
+                                <button onClick={() => handleZoomReset(index)} className="zoom-btn">Reset</button>
+                                <button onClick={() => handleZoomIn(index)} className="zoom-btn">+</button>
+                                <span>{Math.round(docItem.zoomLevel * 100)}%</span>
                             </div>
                             <Frame>
                                 <img
@@ -490,7 +504,7 @@ export default function Page() {
                                     draggable="false"
                                     style={{
                                         width: "-webkit-fill-available",
-                                        transform: `scale(${zoomLevel})`,
+                                        transform: `scale(${docItem.zoomLevel})`,
                                         transformOrigin: 'center',
                                         transition: 'transform 0.2s ease-in-out'
                                     }}
