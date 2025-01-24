@@ -13,7 +13,7 @@
   .search-section {
     display: flex;
     justify-content: flex-start;
-    padding: 20px;
+    padding: 10px;
     background-color: #ffffff;
     border-bottom: 1px solid #ddd;
     flex-direction: row;
@@ -510,7 +510,6 @@ button.closetab-btn svg {
 .sort-label {
   font-size: 14px; /* Font size for the label */
   font-weight: 600; /* Bold text for emphasis */
-  color: #333; /* Dark color for better readability */
   display: flex; /* Use flexbox for alignment */
   align-items: center; /* Center icon and text vertically */
   margin-right: 10px; /* Space between label and dropdown */
