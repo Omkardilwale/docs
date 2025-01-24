@@ -144,11 +144,7 @@
   .toggle-btn-right:hover {
     background-color: #007bff;
   }
-   
-  .doc-head-wrapper {
-    display: flex;
-    justify-content: space-between;
-}
+
   .document-list {
     padding: 0;
     margin-top: 0px;
@@ -499,14 +495,18 @@ button.closetab-btn svg {
 }
 
 
-
+.sort-wrapper {
+  display: flex
+;
+  margin: 10px 0;
+  align-items: center;
+}
 /* src/styling/documentViewer.css */
 .doc-head-wrapper {
-  display: flex; /* Use flexbox for alignment */
-  align-items: center; /* Center items vertically */
-  margin: 10px 0; /* Margin for spacing */
-}
-
+  display: flex;
+  margin: 10px 0;
+  flex-direction: column;
+  }
 .sort-label {
   font-size: 14px; /* Font size for the label */
   font-weight: 600; /* Bold text for emphasis */

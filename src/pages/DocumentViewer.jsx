@@ -381,27 +381,32 @@ export default function Page() {
             {!leftCollapsed && (
               <>
                 {documents.length >= 1 &&
-                 <>
-                  {!leftCollapsed && (
+                  <>
+                    {!leftCollapsed && (
+                      <>
+                        <div className="doc-head-wrapper">
                         <SearchWithSuggestions
-                        documents={documents}
-                        onUpdateRelatedDocuments={handleRelatedDocumentsUpdate}
-                      />
-                        
+                          documents={documents}
+                          onUpdateRelatedDocuments={handleRelatedDocumentsUpdate}
+                        />
+                          <div className="sort-wrapper">
+                          <label htmlFor="sortOptions" className="sort-label">
+                            <FaSort style={{ marginRight: '5px' }} /> Sort By:
+                          </label>
+                          <select id="sortOptions" onChange={handleSortChange} defaultValue="priority">
+                            <option value="dateAscending">Date Ascending</option>
+                            <option value="dateDescending">Date Descending</option>
+                            <option value="priority">Priority</option>
+                            </select>
+                          </div>
+                        </div>
+                      </>
+
                     )}
- 
-                 </>
+
+                  </>
                 }
-                <div className="doc-head-wrapper">
-                  <label htmlFor="sortOptions" className="sort-label">
-                    <FaSort style={{ marginRight: '5px' }} /> Sort By:
-                  </label>
-                  <select id="sortOptions" onChange={handleSortChange} defaultValue="priority">
-                    <option value="dateAscending">Date Ascending</option>
-                    <option value="dateDescending">Date Descending</option>
-                    <option value="priority">Priority</option>
-                  </select>
-                </div>
+
                 <div className="document-list">
                   {filteredDocs?.length >= 1
                     ? filteredDocs.map((doc, index) => (
