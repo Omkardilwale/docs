@@ -1,0 +1,103 @@
+/* styles/Login.module.css */
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  clip-path: polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 25% 50%, 0% 0%);
+  background-color: #2da3ee80;
+}
+
+.formWrapper {
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #2da3ee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inputGroup {
+  margin-bottom: 15px;
+}
+
+.label {
+  display: block;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+}
+.label svg{
+  margin: 0 5px 0 0;
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+}
+
+.input:focus {
+  border-color: #2da3ee; /* Brand color */
+  outline: none;
+}
+
+.select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+  background-color: white;
+}
+
+.select:focus {
+  border-color: #2da3ee; /* Brand color */
+  outline: none;
+}
+
+.button {
+  width: 100%;
+  padding: 12px;
+  background-color: #2da3ee; /* Brand color */
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #2298d0; /* Slightly darker shade of brand color */
+}
+
+.error {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.success {
+  color: green;
+  font-size: 14px;
+  margin-bottom: 15px;
+  text-align: center;
+}

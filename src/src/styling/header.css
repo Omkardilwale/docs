@@ -1,0 +1,66 @@
+/* header.css */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #2da3ee;
+  border-bottom: 1px solid #ddd;
+}
+
+.brand {
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+.brand svg{
+  margin: 0 10px;
+  background-color: white;
+  width: 5.5rem;
+  padding: 6px;
+  border-radius: 4px;
+}
+
+.profile-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 24px;
+  color: #555;
+}
+
+.profile-popup {
+  position: absolute;
+  top: 23px;
+  right: 0;
+  background-color: #fff;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  width: 120px;
+  padding: 10px;
+  z-index: 100;
+  display: none;
+}
+
+.profile-popup p {
+  margin: 0;
+  padding: 10px;
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profile-popup p:hover {
+  background-color: #2da3ee;
+  color: white;
+}
+
+.profile-wrapper:hover .profile-popup {
+  display: block;
+}

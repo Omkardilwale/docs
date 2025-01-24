@@ -1,0 +1,28 @@
+
+
+.navigator-section {
+    width: 50%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 0 10px;
+}
+
+.navigator-section p {
+    padding: 10px;
+    cursor: pointer;
+    border: 1px solid #2da3ee;
+    margin: 0 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.navigator-section svg {
+    margin: 0 10px 0 0;
+}
+
+p.highlighed {
+    background-color: #2da3ee;
+    color: white;
+}
