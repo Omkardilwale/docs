@@ -332,7 +332,7 @@ export default function Page() {
   };
  
   const handleMouseEnter = (doc, e) => {
-    setTooltipContent(`Form ID: ${doc.metaData?.FormID || doc.metaData?.formID}<br />Date: ${formatDDMMYYHHMMSS(doc.metaData.updatedAt)}`);
+    setTooltipContent(`Form ID: ${doc.metaData?.FormID || doc.metaData?.formID} <br/> Date: ${formatDDMMYYHHMMSS(doc.metaData.updatedAt)}`);
     setTooltipVisible(true);
     setTooltipPosition({ top: e.clientY + 10, left: e.clientX + 10 });
   };
