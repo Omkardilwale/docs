@@ -28,16 +28,16 @@ export default function Page() {
   const [documents, setDocuments] = useState([]);
   const [filteredDocs, setFilteredDocs] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [docUrls, setDocUrl] = useState([])
-  const [selectedCatagory, setSelectedCatagory] = useState("")
+  const [docUrls, setDocUrl] = useState([]);
+  const [selectedCatagory, setSelectedCatagory] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [leftWidth, setLeftWidth] = useState(25);
   const [rightWidth, setRightWidth] = useState(15);
   const [isDraggingLeft, setIsDraggingLeft] = useState(false);
   const [isDraggingRight, setIsDraggingRight] = useState(false);
-  const [docName , setDocName] = useState(null)
-  const [isAscending , setIsDescending] = useState(true)
-  const [contentType , setContentType] = useState(null)
+  const [docName , setDocName] = useState(null);
+  const [isAscending , setIsDescending] = useState(true);
+  const [contentType , setContentType] = useState(null);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [tooltipContent, setTooltipContent] = useState('');
@@ -141,46 +141,53 @@ export default function Page() {
     }
   };
  
-  const manageUrls=(newUrl)=>{
-    setDocUrl((prevUrls)=>{
-      // let updatedUrls = [newUrl,...prevUrls]
-      // updatedUrls = [...new Set(updatedUrls)]
-      // return updatedUrls.slice(0,2)
-      if(prevUrls.length===0){
-        return[newUrl]
-      }else{
-        return [prevUrls[0],newUrl]
-      }
-    })
-  }
+  const manageUrls = (newUrl, contentType,docName) => {
+    setDocUrl((prevUrls) => {
+        if (prevUrls.length === 0) {
+            return [{
+                url: newUrl,
+                contentType: contentType,
+                docName:docName
+            }];
+        } else {
+            return [
+                prevUrls[0],
+                {
+                    url: newUrl,
+                    contentType: contentType,
+                    docName:docName
+                }
+            ];
+        }
+    });
+  };
   
   const handleDocumentClick = async (doc) => {
-    const docId = doc.docId
-    const docName = doc.metaData.docName
-    const bucketId = doc.bucketId
-    const contentType = doc.metaData.contentType
-    setDocName(docName)
+    const docId = doc.docId;
+    const docName = doc.metaData.docName;
+    const bucketId = doc.bucketId;
+    const contentType = doc.metaData.contentType;
+    
+    setDocName(docName);
     setLoading(true);
+    
     if (selectedDocId === docId) {
-      setSelectedDocId(docId);
-      setContentType(contentType)
-      setLoading(false); // Stop loader
+        setSelectedDocId(docId);
+        setContentType(contentType);
+        setLoading(false);
     } else {
-      setSelectedDocId(docId);
-      setContentType(contentType)
-      try {
-        const data = await getDocUrl(docId,bucketId);
-        console.log(data.url, "dsssata");
-        // setDocUrl([...docUrl,data.url])
-        manageUrls(data.url)
-      } catch (e) {
-        console.error("Error fetching documents:", e);
-      } finally {
-        setLoading(false); // Stop loader
-      }
+        setSelectedDocId(docId);
+        setContentType(contentType);
+        try {
+            const data = await getDocUrl(docId, bucketId);
+            manageUrls(data.url, contentType,docName);
+        } catch (error) {
+            console.error("Error fetching document URL:", error);
+        } finally {
+            setLoading(false);
+        }
     }
   };
- 
  
   
   const handleCtagoryChange = async (event) => {
@@ -435,59 +442,66 @@ export default function Page() {
             <Loader/>
           ) : (
             docUrls?.length>0?
-            docUrls?.map((docUrl,index)=>{
-              return(
-                <>
-                  <div
+            docUrls?.map((docItem, index) => (
+                <div
+                    key={index}
                     className={`content ${leftCollapsed && rightCollapsed ? "a4-only" : ""}`}
-                    style={docUrls.length===1 ? { width: `${100 - leftWidth - rightWidth}%`}:{ width: `${100 - leftWidth - rightWidth}%`,padding:"10px",border: "2px solid orange"}}
-                    >
-                    <p style={docUrls.length===1 ? {fontSize: "16px"}:{fontSize: "12px"}} className="doc-text-middle">{docName}-{contentType} <button className="closetab-btn" onClick={()=>{closeTab(index)}}><AiFillCloseSquare/></button></p>
- 
-                    {contentType &&
-                      contentType == "image/tiff" ? (
-                        <div className="viewer-container">
-                          <div className="zoom-controls">
-                            <button onClick={handleZoomOut} className="zoom-btn">-</button>
-                            <button onClick={handleZoomReset} className="zoom-btn">Reset</button>
-                            <button onClick={handleZoomIn} className="zoom-btn">+</button>
-                            <span>{Math.round(zoomLevel * 100)}%</span>
-                          </div>
-                          <TiffViewer tiffUrl={docUrl} scale={zoomLevel * (docUrls.length === 1 ? 1.5 : 0.5)}/>
-                        </div>
-                      ) : contentType == "video/webm" || contentType == "video/mp4" ? (
-                        <embed src={docUrl != "" ? `${docUrl}#toolbar=0` : null} type="application/pdf" width="100%" height="100%" />
-                      ) : contentType == "application/pdf" ? (
-                        <PdfViewer docUrl={docUrl} scaleRatio={docUrls?.length==1? 1.5 : 0.5}/>
-                      ) : (
-                        <div className="viewer-container">
-                          <div className="zoom-controls">
-                            <button onClick={handleZoomOut} className="zoom-btn">-</button>
-                            <button onClick={handleZoomReset} className="zoom-btn">Reset</button>
-                            <button onClick={handleZoomIn} className="zoom-btn">+</button>
-                            <span>{Math.round(zoomLevel * 100)}%</span>
-                          </div>
-                          <Frame>
-                            <img
-                              onContextMenu={handleContext}
-                              draggable="false"
-                              style={{
-                                width: "-webkit-fill-available",
-                                transform: `scale(${zoomLevel})`,
-                                transformOrigin: 'center',
-                                transition: 'transform 0.2s ease-in-out'
-                              }}
-                              className="jpg-document"
-                              src={docUrl}
-                            />
-                          </Frame>
-                        </div>
-                      )
+                    style={docUrls.length === 1 
+                        ? { width: `${100 - leftWidth - rightWidth}%`}
+                        : { width: `${100 - leftWidth - rightWidth}%`, padding: "10px", border: "2px solid orange"}
                     }
-                  </div>
-                </>
-              )
-            })
+                >
+                    <p style={docUrls.length === 1 ? {fontSize: "16px"} : {fontSize: "12px"}} 
+                       className="doc-text-middle">
+                        {docItem.docName}-{docItem.contentType} 
+                        <button className="closetab-btn" onClick={() => closeTab(index)}>
+                            <AiFillCloseSquare/>
+                        </button>
+                    </p>
+
+                    {docItem.contentType === "image/tiff" ? (
+                        <div className="viewer-container">
+                            <div className="zoom-controls">
+                                <button onClick={handleZoomOut} className="zoom-btn">-</button>
+                                <button onClick={handleZoomReset} className="zoom-btn">Reset</button>
+                                <button onClick={handleZoomIn} className="zoom-btn">+</button>
+                                <span>{Math.round(zoomLevel * 100)}%</span>
+                            </div>
+                            <TiffViewer tiffUrl={docItem.url} scale={zoomLevel * (docUrls.length === 1 ? 1.5 : 0.5)}/>
+                        </div>
+                    ) : docItem.contentType === "application/pdf" ? (
+                        <PdfViewer docUrl={docItem.url} scaleRatio={docUrls.length === 1 ? 1.5 : 0.5}/>
+                    ) : docItem.contentType.startsWith("video/") ? (
+                        <embed src={docItem.url !== "" ? `${docItem.url}#toolbar=0` : null} 
+                               type="application/pdf" 
+                               width="100%" 
+                               height="100%" />
+                    ) : (
+                        <div className="viewer-container">
+                            <div className="zoom-controls">
+                                <button onClick={handleZoomOut} className="zoom-btn">-</button>
+                                <button onClick={handleZoomReset} className="zoom-btn">Reset</button>
+                                <button onClick={handleZoomIn} className="zoom-btn">+</button>
+                                <span>{Math.round(zoomLevel * 100)}%</span>
+                            </div>
+                            <Frame>
+                                <img
+                                    onContextMenu={handleContext}
+                                    draggable="false"
+                                    style={{
+                                        width: "-webkit-fill-available",
+                                        transform: `scale(${zoomLevel})`,
+                                        transformOrigin: 'center',
+                                        transition: 'transform 0.2s ease-in-out'
+                                    }}
+                                    className="jpg-document"
+                                    src={docItem.url}
+                                />
+                            </Frame>
+                        </div>
+                    )}
+                </div>
+            ))
  
               :
               <div className="content-blank"><HiDocument/></div>
