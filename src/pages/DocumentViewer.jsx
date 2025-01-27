@@ -19,7 +19,11 @@ import TiffViewer from "@/components/TiffViewer";
 import PdfViewer from "@/components/PdfViewer";
 import {documentContentTypeStyle} from '../styling/inlineCSS'
 import CustomTooltip from "@/components/CustomTooltip";
- 
+import { SlOptionsVertical } from "react-icons/sl";
+import { ImNewTab } from "react-icons/im";
+import CryptoJS from 'crypto-js'; // Import the crypto-js library
+import { encryptData } from "@/utils/encrypt";
+
 export default function Page() {
   const [leftCollapsed, setLeftCollapsed] = useState(false);
   const [rightCollapsed, setRightCollapsed] = useState(true);
@@ -42,6 +46,7 @@ export default function Page() {
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [tooltipContent, setTooltipContent] = useState('');
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
+  const [dropdownVisible, setDropdownVisible] = useState({});
   const router = useRouter();
  
   const styles = {
@@ -377,6 +382,37 @@ export default function Page() {
   const handleMouseLeave = () => {
     setTooltipVisible(false);
   };
+  const handleNewTab = async (data) => {
+    const { doc } = data;
+    setLoading(true);
+    
+    try {
+      // Fetch the document URL first
+      const urlData = await getDocUrl(doc.docId, doc.bucketId);
+      
+      // Create docUrl object with the same structure as in manageUrls
+      const docUrlObject = {
+        url: urlData.url,
+        contentType: doc.metaData.contentType,
+        docName: doc.metaData.docName,
+        zoomLevel: 1,
+        rotationAngle: 0
+      };
+
+      // Encrypt the data
+      const encryptedDoc = encryptData(doc);
+      const encryptedDocUrls = encryptData([docUrlObject]); // Wrap in array to match existing structure
+
+      // Create the URL with encrypted parameters
+      const newTabUrl = `/docviewer/dockview?doc=${encodeURIComponent(encryptedDoc)}&docUrls=${encodeURIComponent(encryptedDocUrls)}`;
+      window.open(newTabUrl, '_blank');
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching document URL:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
  
   return (
     <>
@@ -432,17 +468,20 @@ export default function Page() {
                         onClick={() => handleDocumentClick(doc)}
                         onMouseEnter={(e) => handleMouseEnter(doc, e)}
                         onMouseLeave={handleMouseLeave}
+                        style={{ position: 'relative' }}
                       >
                         <div className="doc-details">
-                        <div className="doc-icon"><p className="doc-type">{getDocumentIcon(doc)}{doc.metaData?.docType}</p>/
-                        {/* <p style={{fontSize:"12px"}}>{doc.metaData?.FormID || doc.metaData?.formID}</p> */}
-                        </div>                         
-                        <div className="d-d-lower-pallet">
+                          <div className="doc-icon">
+                            <p className="doc-type">{getDocumentIcon(doc)}{doc.metaData?.docType}</p>
+                          </div>
+                          <div className="d-d-lower-pallet">
                             <p className="doc-content-type" style={documentContentTypeStyle(doc.metaData?.docName)}>
                               {doc.metaData?.docName}
                             </p>
-                            {/* <p className="d-d-date">{formatDDMMYYHHMMSS(doc.metaData.updatedAt)}</p> */}
-                          </div>  
+                          </div>
+                        </div>
+                        <div className="options-menu" onClick={(e) => { e.stopPropagation(); handleNewTab({doc}); }}>
+                          <ImNewTab size={20} />
                         </div>
                       </div>
                     ))
@@ -453,17 +492,20 @@ export default function Page() {
                         onClick={() => handleDocumentClick(doc)}
                         onMouseEnter={(e) => handleMouseEnter(doc, e)}
                         onMouseLeave={handleMouseLeave}
+                        style={{ position: 'relative' }}
                       >
                         <div className="doc-details">
-                          <div className="doc-icon"><p className="doc-type">{getDocumentIcon(doc)}{doc.metaData?.docType}</p>
-                          {/* <p style={{fontSize:"12px"}}>{doc.metaData?.FormID || doc.metaData?.formID}</p> */}
+                          <div className="doc-icon">
+                            <p className="doc-type">{getDocumentIcon(doc)}{doc.metaData?.docType}</p>
                           </div>
                           <div className="d-d-lower-pallet">
                             <p className="doc-content-type" style={documentContentTypeStyle(doc.metaData?.docName)}>
                               {doc.metaData?.docName}
                             </p>
-                            {/* <p className="d-d-date">{formatDDMMYYHHMMSS(doc.metaData.updatedAt)}</p> */}
-                          </div>                         
+                          </div>
+                        </div>
+                        <div className="options-menu" onClick={(e) => { e.stopPropagation(); handleNewTab({doc}); }}>
+                          <ImNewTab size={20} />
                         </div>
                       </div>
                     ))}

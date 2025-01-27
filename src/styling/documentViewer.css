@@ -157,10 +157,11 @@
     border-bottom: 1px solid #ddd;
     cursor: pointer;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
     transition: background-color 0.3s ease;
-  }
+    text-wrap: auto;
+}
    
   .document-item:hover {
     background-color: #2da3ee;
@@ -536,4 +537,35 @@ button.closetab-btn svg {
 
 #sortOptions option {
   padding: 8px; /* Padding for options */
+}
+
+.options-menu {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+      /* margin-left: 10px; */
+  position: relative;
+  color: lightgrey;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0; /* Align to the right of the options menu */
+  top: 100%; /* Position below the options menu */
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000; /* Ensure it appears above other elements */
+  width: 150px; /* Set a width for the dropdown */
+}
+
+.dropdown-menu div {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.dropdown-menu div:hover {
+  background-color: #f0f0f0; /* Highlight on hover */
 }
