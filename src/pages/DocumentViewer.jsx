@@ -23,6 +23,7 @@ import { SlOptionsVertical } from "react-icons/sl";
 import { ImNewTab } from "react-icons/im";
 import CryptoJS from 'crypto-js'; // Import the crypto-js library
 import { encryptData } from "@/utils/encrypt";
+import ToolbarComponent from "@/components/Toolbar";
 
 export default function Page() {
   const [leftCollapsed, setLeftCollapsed] = useState(false);
@@ -413,6 +414,11 @@ export default function Page() {
       setLoading(false);
     }
   };
+
+  const handleSplit = () => {
+    // Logic for horizontal splitting can be implemented here
+    console.log("Horizontal split triggered");
+  };
  
   return (
     <>
@@ -420,7 +426,7 @@ export default function Page() {
         <Header/>
         <NavigationBar searchQuery={searchQuery} handlePolicyNumberChange={handlePolicyNumberChange} handleSearch={handleSearch}/>
  
- 
+        <ToolbarComponent onSplit={handleSplit} />
         <div className="body-container">
           <div className={`sidebar left ${leftCollapsed ? "collapsed" : ""}`} style={{ width: !leftCollapsed && `${leftWidth}%` }} >
             <button
