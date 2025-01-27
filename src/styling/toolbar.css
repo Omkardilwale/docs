@@ -11,7 +11,7 @@
 .toolbar button {
     padding: 6px 12px; /* Slightly larger padding for a button-like feel */
     margin: 0 5px; /* Space between buttons */
-    background-color: #0078d4; /* Windows blue color */
+    background-color: #2da3ee; /* Windows blue color */
     color: white; /* Text color */
     border: none; /* Remove border */
     border-radius: 4px; /* Rounded corners */
@@ -30,10 +30,4 @@
 .toolbar button:active {
     background-color: #2da3ee; /* Highlight color on click */
     border-color: #2da3ee; /* Optional: border color on click */
-}
-
-.highlighted {
-    background-color: #007bff; /* Change to your desired highlight color */
-    color: white; /* Change text color if needed */
-    border: 2px solid #0056b3; /* Optional: add a border for better visibility */
 }

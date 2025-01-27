@@ -1,30 +1,26 @@
 import React, { useState } from 'react';
 import '../styling/toolbar.css';
+import { BsWindowSplit } from "react-icons/bs";
+import { LuAppWindow } from "react-icons/lu";
 
-const ToolbarComponent = ({ onSplit }) => {
+const ToolbarComponent = ({ onSplit, isSplitView }) => {
   const [highlightedButton, setHighlightedButton] = useState(null);
 
   const handleButtonClick = (button) => {
     setHighlightedButton(button);
+    if (button === 'split') {
+      onSplit(!isSplitView); // Pass the next state value
+    }
   };
 
   return (
     <div className="toolbar">
       <button 
-        onClick={() => { handleButtonClick('split'); onSplit(); }} 
-        className={highlightedButton === 'split' ? 'highlighted' : ''}
+        onClick={() => handleButtonClick('split')} 
+        className={isSplitView ? 'highlighted' : ''}
       >
-        <span className="icon">🪟</span> {/* Example icon, replace with actual icons */}
-        Split Horizontally
+        {isSplitView ? <LuAppWindow /> : <BsWindowSplit />}
       </button>
-      <button 
-        onClick={() => handleButtonClick('refresh')} 
-        className={highlightedButton === 'refresh' ? 'highlighted' : ''}
-      >
-        <span className="icon">🔄</span> {/* Example icon */}
-        Refresh
-      </button>
-      {/* Add more toolbar buttons here if needed */}
     </div>
   );
 };

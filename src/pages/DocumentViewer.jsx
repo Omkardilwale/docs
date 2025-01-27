@@ -49,6 +49,7 @@ export default function Page() {
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
   const [dropdownVisible, setDropdownVisible] = useState({});
   const router = useRouter();
+  const [isSplitView, setIsSplitView] = useState(false);
  
   const styles = {
     viewerContainer: {
@@ -416,8 +417,8 @@ export default function Page() {
   };
 
   const handleSplit = () => {
-    // Logic for horizontal splitting can be implemented here
-    console.log("Horizontal split triggered");
+    setIsSplitView(prevState => !prevState); // Toggle the split view state
+    console.log("Split view toggled:", !isSplitView);
   };
  
   return (
@@ -426,7 +427,10 @@ export default function Page() {
         <Header/>
         <NavigationBar searchQuery={searchQuery} handlePolicyNumberChange={handlePolicyNumberChange} handleSearch={handleSearch}/>
  
-        <ToolbarComponent onSplit={handleSplit} />
+        <ToolbarComponent 
+          onSplit={handleSplit} 
+          isSplitView={isSplitView}
+        />
         <div className="body-container">
           <div className={`sidebar left ${leftCollapsed ? "collapsed" : ""}`} style={{ width: !leftCollapsed && `${leftWidth}%` }} >
             <button
@@ -525,7 +529,7 @@ export default function Page() {
             <Loader/>
           ) : (
             docUrls?.length>0?
-            docUrls?.map((docItem, index) => (
+            (isSplitView ? docUrls : [docUrls[docUrls?.length==2?1:0]])?.map((docItem, index) => (
                 <div
                     key={index}
                     className={`content ${leftCollapsed && rightCollapsed ? "a4-only" : ""}`}
@@ -580,7 +584,7 @@ export default function Page() {
                             </Frame>
                         </div>
                     ) : docItem.contentType === "application/pdf" ? (
-                        <PdfViewer docUrl={docItem.url} scaleRatio={docUrls.length === 1 ? 1.5 : 0.5}/>
+                        <PdfViewer docUrl={docItem.url} scaleRatio={!isSplitView ? 1.5 : 0.5}/>
                     ) : docItem.contentType.startsWith("video/") ? (
                         <embed src={docItem.url !== "" ? `${docItem.url}#toolbar=0` : null} 
                                type="application/pdf" 
