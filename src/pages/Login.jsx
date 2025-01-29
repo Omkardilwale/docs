@@ -2,13 +2,14 @@ import { useState } from 'react';
 import styles from '../styling/login.module.css';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
-import { login } from '@/utils/api';
+import { login, sendEvent } from '@/utils/api';
 import { RiLoginBoxFill } from "react-icons/ri";
 import { IoPerson } from "react-icons/io5";
 import { PiPasswordFill } from "react-icons/pi";
 import { BsFillLaptopFill } from "react-icons/bs";
 import BrandLogoSvg from '../images/svg/BrandLogo';
 import OverlayLoader from '@/components/OverlayLoader';
+import { commonEventAttributes } from '@/utils/utils';
 
 export default function Login() {
   const [UserId, setUserId] = useState('');
@@ -70,8 +71,24 @@ export default function Login() {
           console.log("tokens",data)
           Cookies.set('accessToken' , data.accessToken,{secure:true,sameSite:'Strict'});
           Cookies.set('refreshToken' , data.refreshToken,{secure:true,sameSite:'Strict'});
+          sendEvent({
+            name: "login_success",
+            attributes: {
+              userId:UserId,
+              role: dropdownSelection,
+              ...commonEventAttributes(),
+            }
+          })
           router.push('/document-viewer');
         } else {
+          sendEvent({
+            name: "login_failed",
+            attributes: {
+              userId:UserId,
+              role: dropdownSelection,
+              ...commonEventAttributes(),
+            }
+          })
           setError(data._status?.code === 0 ? 'Invalid credentials' : 'Login failed');
         }
         setLoader(false);
@@ -83,12 +100,28 @@ export default function Login() {
      
         Cookies.set('accessToken' , accessToken,{secure:true,sameSite:'Strict'});
         Cookies.set('refreshToken' , refreshToken,{secure:true,sameSite:'Strict'});
+        sendEvent({
+          name: "login_success",
+          attributes: {
+            userId:UserId,
+            role: dropdownSelection,
+            ...commonEventAttributes(),
+          }
+        })
         router.push('/document-viewer');
 
         setLoader(false);
 
       }
     } catch (err) {
+      sendEvent({
+        name: "login_error",
+        attributes: {
+          userId:UserId,
+          role: dropdownSelection,
+          ...commonEventAttributes(),
+        }
+      })
       setError(`Error: ${err.message}`);
       setLoader(false);
     }

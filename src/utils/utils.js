@@ -28,7 +28,41 @@ const getDocNameColor = (docName) => {
     }
   }
 
+const commonEventAttributes = () => {
+  let userAgent = navigator.userAgent;
+  let browserName = "Unknown";
+  let browserVersion = userAgent.match(/(?:firefox|edge|chrome|safari|opera|rv)[\s/:](\d+(\.\d+)?)/i)?.[1] || "Unknown";
+  if (userAgent.includes("Firefox")) {
+    browserName = "Mozilla Firefox";
+  } else if (userAgent.includes("Edg")) {
+    browserName = "Microsoft Edge";
+  } else if (userAgent.includes("Chrome") && !userAgent.includes("Edg")) {
+    browserName = "Google Chrome";
+  } else if (userAgent.includes("Safari") && !userAgent.includes("Chrome")) {
+    browserName = "Apple Safari";
+  } else if (userAgent.includes("Opera") || userAgent.includes("OPR")) {
+    browserName = "Opera";
+  } else if (userAgent.includes("MSIE") || userAgent.includes("Trident")) {
+    browserName = "Internet Explorer";
+  }
 
+  return {
+    browserName,
+    browserVersion,
+    userAgent: navigator.userAgent,
+    platform: navigator.userAgentData?.platform || navigator.platform || 'unknown',
+    language: navigator.language,
+    cookiesEnabled: navigator.cookieEnabled,
+    isOnline: navigator.onLine,
+    screen: {
+      width: screen.width,
+      height: screen.height,
+      availableWidth: screen.availWidth,
+      availableHeight: screen.availHeight,
+      colorDepth: screen.colorDepth,
+      pixelDepth: screen.pixelDepth
+    }
+  };
+};
 
-
-  export{getDocNameColor , formatDDMMYYHHMMSS}
+export { getDocNameColor, formatDDMMYYHHMMSS, commonEventAttributes }

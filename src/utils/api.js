@@ -50,4 +50,37 @@ const login = async(requestBody)=>{
   }
 }
 
-export { fetchDocuments, getDocUrl, fetchDocumentsByCatagory ,login};
+const sendEvent = async (eventData) => {
+  console.log(eventData)
+  try {
+    const response = await apiClient.post('/event', {
+      events: [
+        {
+          name: eventData.name,
+          source: "docviewer",
+          type: "appevent.docviewer",
+          attributes: {
+            ...eventData.attributes,
+            logTime: new Date().toLocaleString('en-GB', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit'
+            }).replace(',', ''),
+            isMobile: true,
+            userAgent: navigator.userAgent
+          },
+          time: new Date().toISOString()
+        }
+      ],
+    });
+    // console.log(response.data)
+  } catch (error) {
+    console.error('Error sending event:', error);
+    throw error;
+  }
+};
+
+export { fetchDocuments, getDocUrl, fetchDocumentsByCatagory, login, sendEvent };
