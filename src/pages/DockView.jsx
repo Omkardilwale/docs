@@ -23,7 +23,6 @@ const DockView = () => {
     if (docData) {
         try {
             const decryptedDoc = decryptData(decodeURIComponent(docData)); // Decrypt and set the doc data
-            console.log(decryptedDoc)
             setDoc(decryptedDoc);
         } catch (error) {
             console.error('Error decrypting docData:', error); // Log the error
@@ -32,23 +31,12 @@ const DockView = () => {
     if (docUrlsData) {
         try {
             const decryptedDocUrls = decryptData(decodeURIComponent(docUrlsData)); // Decrypt and set the docUrls data
-            console.log(decryptedDocUrls)
             setDocUrls(decryptedDocUrls);
         } catch (error) {
             console.error('Error decrypting docUrlsData:', error); // Log the error
         }
     }
 
-    // Disable right-click context menu
-    const handleContextMenu = (event) => {
-      event.preventDefault();
-    };
-
-    window.addEventListener('contextmenu', handleContextMenu);
-
-    return () => {
-      window.removeEventListener('contextmenu', handleContextMenu);
-    };
   }, []);
 
   const handleZoomIn = () => {
@@ -69,7 +57,7 @@ const DockView = () => {
   };
 
   return (
-    <div className="document-viewer-container" style={{ userSelect: 'none' }}>
+    <div className="document-viewer-container" >
       {docUrls?.length > 0 ? (
         docUrls.map((docItem, index) => (
           <div key={index} className="content">
@@ -99,7 +87,7 @@ const DockView = () => {
             ) : docItem.contentType === "image/tiff" ?(
               <TiffViewer docUrl={docItem.url} />
             ): docItem.contentType === "image/jpeg" ? (
-              <div style={{ overflow: 'hidden', maxWidth: '100%', position: 'relative' }}>
+              <div style={{ overflow: 'hidden', maxWidth: '100%', position: 'relative', height: '100vh', overflowY: 'auto' }}>
                 <img 
                   src={docItem.url} 
                   alt={docItem.docName} 
@@ -107,7 +95,7 @@ const DockView = () => {
                 />
               </div>
             ) : docItem.contentType === "image/png" ? (
-              <div style={{ overflow: 'hidden', maxWidth: '100%', position: 'relative' }}>
+              <div style={{ overflow: 'hidden', maxWidth: '100%', position: 'relative', height: '100vh', overflowY: 'auto' }}>
                 <img 
                   src={docItem.url} 
                   alt={docItem.docName} 

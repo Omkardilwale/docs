@@ -13,16 +13,16 @@ pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.vers
 export default function PdfViewer({ docUrl , scaleRatio}) {
     const [numPages, setNumPages] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [width, setWidth] = useState(350);
+    const [scale, setScale] = useState(scaleRatio);
 
     // useState(()=>{
     //     console.log(docUrl)
     // })
     
 
-    const minWidth = 150;
-    const maxWidth = 1000;
-    const zoomStep = 20;
+    const minScale = 0.25;
+    const maxScale = 3;
+    const zoomStep = 0.25;
 
     function onDocumentLoadSuccess({ numPages }) {
         setNumPages(numPages);
@@ -30,64 +30,65 @@ export default function PdfViewer({ docUrl , scaleRatio}) {
     }
 
     const handleZoomIn = () => {
-        setWidth((prevWidth) => Math.min(prevWidth + zoomStep, maxWidth));
+        if (scale < maxScale) {
+            setScale((prevScale) => Math.min(prevScale + zoomStep, maxScale));
+        }
     };
 
     const handleZoomOut = () => {
-        setWidth((prevWidth) => Math.max(prevWidth - zoomStep, minWidth));
+        if (scale > minScale) {
+            setScale((prevScale) => Math.max(prevScale - zoomStep, minScale));
+        }
     };
 
-    const preventContextMenu = (e) => {
-        e.preventDefault();
-        return false;
-    };
+    // const preventContextMenu = (e) => {
+    //     e.preventDefault();
+    //     return false;
+    // };
 
     return (
         <>
             {loading && <Loader />}
 
-            <div className={styles.page}>
+            <div className={styles.page} >
                 <main className={styles.main}>
-                    <div className={styles.pdfViewer} onContextMenu={preventContextMenu}>
-                        <div className={styles.scrollContainer}>
-                            <Document
-                                file={docUrl}
-                                onLoadSuccess={onDocumentLoadSuccess}
-                                className={styles.pdfDocument}
-                            >
-                                <div className={styles.pagesContainer}>
-                                    {Array.from(new Array(numPages), (el, index) => (
-                                        <div key={`page_${index + 1}`} className={styles.pageWrapper}>
-                                            <Page
-                                                pageNumber={index + 1}
-                                                className={styles.pdfPage}
-                                                scale={3}
-                                                renderTextLayer={true}
-                                                renderAnnotationLayer={true}
-                                                quality={2}
-                                                width={width}
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-                            </Document>
-                        </div>
+                    <div className={styles.pdfViewer} >
+                        <Document
+                            file={docUrl}
+                            onLoadSuccess={onDocumentLoadSuccess}
+                            className={styles.pdfDocument}
+                        >
+                            <div className={styles.pagesContainer}>
+                                {Array.from(new Array(numPages), (el, index) => (
+                                    <div key={`page_${index + 1}`} className={styles.pageWrapper}>
+                                        <Page
+                                            pageNumber={index + 1}
+                                            className={styles.pdfPage}
+                                            scale={scale}
+                                            renderTextLayer={true}
+                                            renderAnnotationLayer={true}
+                                            quality={1}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </Document>
 
                         <div className={styles.controls}>
                             <div className={styles.zoomControls}>
                                 <button
                                     className={styles.zoomButton}
                                     onClick={handleZoomOut}
-                                    disabled={width <= minWidth}
+                                    disabled={scale <= minScale}
                                     aria-label="Zoom out"
                                 >
                                     −
                                 </button>
-                                <span className={styles.zoomLevel}>{Math.round(width)}%</span>
+                                <span className={styles.zoomLevel}>{Math.round(scale * 100)}%</span>
                                 <button
                                     className={styles.zoomButton}
                                     onClick={handleZoomIn}
-                                    disabled={width >= maxWidth}
+                                    disabled={scale >= maxScale}
                                     aria-label="Zoom in"
                                 >
                                     +

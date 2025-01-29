@@ -50,6 +50,10 @@ export default function Page() {
   const [dropdownVisible, setDropdownVisible] = useState({});
   const router = useRouter();
   const [isSplitView, setIsSplitView] = useState(false);
+  const [alertMsg , setAlertMsg] = useState({
+    title:"No Documents Found",
+    msg:"We couldn't find any documents to display. Please try again."
+  })
  
   const styles = {
     viewerContainer: {
@@ -176,9 +180,26 @@ export default function Page() {
     const docName = doc.metaData.docName;
     const bucketId = doc.bucketId;
     const contentType = doc.metaData.contentType;
+    if(!docId){
+      setShowPopup(true)
+      setAlertMsg({
+        title:"Document Not Found",
+        msg:"Oops! We couldn't find a document ID."
+      })
+      return
+    }
+    if(!bucketId){
+      setShowPopup(true)
+      setAlertMsg({
+        title:"Document Not Found",
+        msg:"Oops! We couldn't find a bucket ID."
+      })
+      return
+    }
     
     setDocName(docName);
     setLoading(true);
+    
     
     if (selectedDocId === docId) {
         setSelectedDocId(docId);
@@ -304,14 +325,15 @@ export default function Page() {
     setIsDescending(!isAscending)
   }
  
-  const handleContext = (event)=>{
-    event.preventDefault();
-    // alert("right-click is disabled on this page")
-  }
+  // const handleContext = (event)=>{
+  //   event.preventDefault();
+  // }
  
   const closeTab=(indexToRemove)=>{
-    console.log(indexToRemove)
+    {isSplitView ?
     setDocUrl((prevUrls)=>docUrls.filter((_,index)=>index!==indexToRemove))
+    :setDocUrl([])
+    }
   }
  
   const handleZoomIn = (index) => {
@@ -386,6 +408,26 @@ export default function Page() {
   };
   const handleNewTab = async (data) => {
     const { doc } = data;
+    const docId = doc.docId;
+    const bucketId = doc.bucketId;
+
+    if(!docId){
+      setShowPopup(true)
+      setAlertMsg({
+        title:"Document Not Found",
+        msg:"Oops! We couldn't find a document ID."
+      })
+      return
+    }
+    if(!bucketId){
+      setShowPopup(true)
+      setAlertMsg({
+        title:"Document Not Found",
+        msg:"Oops! We couldn't find a bucket ID."
+      })
+      return
+    }
+
     setLoading(true);
     
     try {
@@ -473,7 +515,7 @@ export default function Page() {
                   {filteredDocs?.length >= 1
                     ? filteredDocs.map((doc, index) => (
                       <div
-                        className={`document-item ${selectedDocId === doc.docId ? "highlighted" : ""}`}
+                        className={`document-item ${doc?.docId && selectedDocId === doc?.docId ? "highlighted" : ""}`}
                         key={index}
                         onClick={() => handleDocumentClick(doc)}
                         onMouseEnter={(e) => handleMouseEnter(doc, e)}
@@ -497,7 +539,7 @@ export default function Page() {
                     ))
                     : documents?.map((doc, index) => (
                       <div
-                        className={`document-item ${selectedDocId === doc.docId ? "highlighted" : ""}`}
+                        className={`document-item ${doc?.docId && selectedDocId === doc.docId ? "highlighted" : ""}`}
                         key={index}
                         onClick={() => handleDocumentClick(doc)}
                         onMouseEnter={(e) => handleMouseEnter(doc, e)}
@@ -535,10 +577,10 @@ export default function Page() {
                     className={`content ${leftCollapsed && rightCollapsed ? "a4-only" : ""}`}
                     style={docUrls.length === 1 
                         ? { width: `${100 - leftWidth - rightWidth}%`}
-                        : { width: `${100 - leftWidth - rightWidth}%`, padding: "10px", border: "2px solid orange"}
+                        : { width: `${100 - leftWidth - rightWidth}%`, padding: "10px", border: isSplitView &&  "2px solid orange"}
                     }
                 >
-                    <p style={docUrls.length === 1 ? {fontSize: "16px"} : {fontSize: "12px"}} 
+                    <p style={docUrls.length === 1 || !isSplitView? {fontSize: "16px"} : {fontSize: "12px"}} 
                        className="doc-text-middle">
                         {docItem.docName}-{docItem.contentType} 
                         <button className="closetab-btn" onClick={() => closeTab(index)}>
@@ -548,29 +590,21 @@ export default function Page() {
 
                     {docItem.contentType === "image/tiff" ? (
                         <div className="viewer-container">
-                            <div className="zoom-controls">
-                                <button onClick={() => handleZoomOut(index)} className="zoom-btn">-</button>
-                                <button onClick={() => handleZoomReset(index)} className="zoom-btn">Reset</button>
-                                <button onClick={() => handleZoomIn(index)} className="zoom-btn">+</button>
-                                <button onClick={() => handleRotateLeft(index)} className="zoom-btn"><FaArrowRotateLeft/></button>
-                                <button onClick={() => handleRotateRight(index)} className="zoom-btn"><FaArrowRotateRight/></button>
-                                <span>{Math.round(docItem.zoomLevel * 100)}%</span>
-                            </div>
                             <TiffViewer tiffUrl={docItem.url} scale={docItem.zoomLevel * (docUrls.length === 1 ? 1.5 : 0.5)} rotationAngle={docItem.rotationAngle || 0}/>
                         </div>
                     ) : (docItem.contentType === "image/jpeg" || docItem.contentType === "image/png") ? (
                         <div className="viewer-container">
                             <div className="zoom-controls">
-                                <button onClick={() => handleZoomOut(index)} className="zoom-btn">-</button>
-                                <button onClick={() => handleZoomReset(index)} className="zoom-btn">Reset</button>
-                                <button onClick={() => handleZoomIn(index)} className="zoom-btn">+</button>
-                                <button onClick={() => handleRotateLeft(index)} className="zoom-btn"><FaArrowRotateLeft/></button>
-                                <button onClick={() => handleRotateRight(index)} className="zoom-btn"><FaArrowRotateRight/></button>
+                                <button onClick={() => handleZoomOut(isSplitView ? index:docUrls.length===1?0 :docUrls.length===2?1:null)} className="zoom-btn">-</button>
+                                <button onClick={() => handleZoomReset(isSplitView ? index:docUrls.length===1?0 :docUrls.length===2?1:null)} className="zoom-btn">Reset</button>
+                                <button onClick={() => handleZoomIn(isSplitView ? index:docUrls.length===1?0 :docUrls.length===2?1:null)} className="zoom-btn">+</button>
+                                <button onClick={() => handleRotateLeft(isSplitView ? index:docUrls.length===1?0 :docUrls.length===2?1:null)} className="zoom-btn"><FaArrowRotateLeft/></button>
+                                <button onClick={() => handleRotateRight(isSplitView ? index:docUrls.length===1?0 :docUrls.length===2?1:null)} className="zoom-btn"><FaArrowRotateRight/></button>
                                 <span>{Math.round(docItem.zoomLevel * 100)}%</span>
                             </div>
                             <Frame>
                                 <img
-                                    onContextMenu={handleContext}
+                                    // onContextMenu={handleContext}
                                     draggable="false"
                                     style={{
                                         width: "-webkit-fill-available",
@@ -593,16 +627,16 @@ export default function Page() {
                     ) : (
                         <div className="viewer-container">
                             <div className="zoom-controls">
-                                <button onClick={() => handleZoomOut(index)} className="zoom-btn">-</button>
-                                <button onClick={() => handleZoomReset(index)} className="zoom-btn">Reset</button>
-                                <button onClick={() => handleZoomIn(index)} className="zoom-btn">+</button>
-                                <button onClick={() => handleRotateLeft(index)} className="zoom-btn">Rotate Left</button>
-                                <button onClick={() => handleRotateRight(index)} className="zoom-btn">Rotate Right</button>
+                                <button onClick={() => handleZoomOut(isSplitView ? index:docUrls.length===1?0 :docUrls.length===2?1:null)} className="zoom-btn">-</button>
+                                <button onClick={() => handleZoomReset(isSplitView ? index:docUrls.length===1?0 :docUrls.length===2?1:null)} className="zoom-btn">Reset</button>
+                                <button onClick={() => handleZoomIn(isSplitView ? index:docUrls.length===1?0 :docUrls.length===2?1:null)} className="zoom-btn">+</button>
+                                <button onClick={() => handleRotateLeft(isSplitView ? index:docUrls.length===1?0 :docUrls.length===2?1:null)} className="zoom-btn">Rotate Left</button>
+                                <button onClick={() => handleRotateRight(isSplitView ? index:docUrls.length===1?0 :docUrls.length===2?1:null)} className="zoom-btn">Rotate Right</button>
                                 <span>{Math.round(docItem.zoomLevel * 100)}%</span>
                             </div>
                             <Frame>
                                 <img
-                                    onContextMenu={handleContext}
+                                    // onContextMenu={handleContext}
                                     draggable="false"
                                     style={{
                                         width: "-webkit-fill-available",
@@ -640,8 +674,8 @@ export default function Page() {
       </div>
  
  
-      {showPopup &&
-        <AlertPopup close={closePopup} title={"No Documents Found"} msg={"We couldn't find any documents to display. Please try again."} />
+      {showPopup && alertMsg &&
+        <AlertPopup close={closePopup} title={alertMsg.title} msg={alertMsg.msg} />
       }
       <CustomTooltip content={tooltipContent} visible={tooltipVisible} position={tooltipPosition} />
     </>

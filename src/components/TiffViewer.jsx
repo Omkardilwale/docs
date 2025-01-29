@@ -27,7 +27,7 @@ function TiffViewer({ tiffUrl }) {
     renderTiff();
   }, [tiffUrl]);
  
-  return <canvas style={{width:"100%"}} ref={canvasRef} onContextMenu={(e)=>e.preventDefault()}/>;
+  return <canvas style={{width:"100%"}} ref={canvasRef} />;
 }
  
 export default TiffViewer;
