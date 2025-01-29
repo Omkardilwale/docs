@@ -2,11 +2,15 @@ import React, { useState ,useEffect} from 'react';
 import '../styling/searchWithSuggestions.css'; 
 import { display, style } from '@mui/system';
 import { MdClear } from "react-icons/md";
+import { sendEvent } from '@/utils/api';
+import { commonEventAttributes } from '@/utils/utils';
 
-const SearchWithSuggestions = ({ documents, onUpdateRelatedDocuments }) => { 
+const SearchWithSuggestions = ({ documents, onUpdateRelatedDocuments, policyNumber }) => { 
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [selectedSuggestions, setSelectedSuggestions] = useState([]);
+  const[UserId,setUserId] = useState(sessionStorage.getItem('userId'))
+
 
   useEffect(()=>{
     // console.log(documents)
@@ -39,12 +43,21 @@ const SearchWithSuggestions = ({ documents, onUpdateRelatedDocuments }) => {
     }
   };
 
-  const handleSuggestionClick = (docType) => {
+  const handleSuggestionClick = async (docType) => {
     if (!selectedSuggestions.includes(docType)) {
       setSelectedSuggestions(prevState => [...prevState, docType]);
       const relatedDocs = documents.filter(doc => docType === doc.metaData.docType);
       onUpdateRelatedDocuments(relatedDocs); 
     }
+    await sendEvent({
+      name: "filter_documents",
+      attributes: {
+        userId:UserId,
+        ...commonEventAttributes(),
+        docType: docType,
+        policyNumber: policyNumber,
+      }
+    })
   };
 
   const handleKeyPress = (e) => {

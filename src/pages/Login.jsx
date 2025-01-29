@@ -71,7 +71,7 @@ export default function Login() {
           console.log("tokens",data)
           Cookies.set('accessToken' , data.accessToken,{secure:true,sameSite:'Strict'});
           Cookies.set('refreshToken' , data.refreshToken,{secure:true,sameSite:'Strict'});
-          sendEvent({
+          await sendEvent({
             name: "login_success",
             attributes: {
               userId:UserId,
@@ -81,7 +81,7 @@ export default function Login() {
           })
           router.push('/document-viewer');
         } else {
-          sendEvent({
+          await sendEvent({
             name: "login_failed",
             attributes: {
               userId:UserId,
@@ -100,7 +100,7 @@ export default function Login() {
      
         Cookies.set('accessToken' , accessToken,{secure:true,sameSite:'Strict'});
         Cookies.set('refreshToken' , refreshToken,{secure:true,sameSite:'Strict'});
-        sendEvent({
+        await sendEvent({
           name: "login_success",
           attributes: {
             userId:UserId,
@@ -114,7 +114,7 @@ export default function Login() {
 
       }
     } catch (err) {
-      sendEvent({
+      await sendEvent({
         name: "login_error",
         attributes: {
           userId:UserId,

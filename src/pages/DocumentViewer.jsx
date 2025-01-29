@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import "../styling/documentViewer.css";
 import Frame from 'react-frame-component'
 import AlertPopup from "@/components/AlertPopup";
-import { formatDDMMYYHHMMSS, getDocNameColor } from "@/utils/utils";
-import { fetchDocuments, fetchDocumentsByCatagory, getDocUrl } from "@/utils/api";
+import { commonEventAttributes, formatDDMMYYHHMMSS, getDocNameColor } from "@/utils/utils";
+import { fetchDocuments, fetchDocumentsByCatagory, getDocUrl, sendEvent } from "@/utils/api";
 import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
@@ -54,6 +54,7 @@ export default function Page() {
     title:"No Documents Found",
     msg:"We couldn't find any documents to display. Please try again."
   })
+  const[UserId,setUserId] = useState(sessionStorage.getItem('userId'))
  
   const styles = {
     viewerContainer: {
@@ -145,6 +146,14 @@ export default function Page() {
       }
       setFilteredDocs([]);
       console.log(sortedDocs, "sorted");
+      await sendEvent({
+        name: "search_documents",
+        attributes: {
+          userId:UserId,
+          ...commonEventAttributes(),
+          policyNumber: policyNumber,
+        }
+      })
     } catch (e) {
       console.error("Error fetching documents:", e);
     } finally {
@@ -211,7 +220,27 @@ export default function Page() {
         try {
             const data = await getDocUrl(docId, bucketId);
             manageUrls(data.url, contentType,docName);
+            await sendEvent({
+              name: "document_click",
+              attributes: {
+                userId:UserId,
+                ...commonEventAttributes(),
+                docName: docName,
+                docId: docId,
+                policyNumber: searchQuery,
+              }
+            })
         } catch (error) {
+          await sendEvent({
+            name: "document_click_error",
+            attributes: {
+              userId:UserId,
+              ...commonEventAttributes(),
+              docName: docName,
+              docId: docId,
+              policyNumber: searchQuery,
+            }
+          })
             console.error("Error fetching document URL:", error);
         } finally {
             setLoading(false);
@@ -449,10 +478,30 @@ export default function Page() {
 
       // Create the URL with encrypted parameters
       const newTabUrl = `/docviewer/dockview?doc=${encodeURIComponent(encryptedDoc)}&docUrls=${encodeURIComponent(encryptedDocUrls)}`;
+      await sendEvent({
+        name: "new_tab_open",
+        attributes: {
+          userId:UserId,
+          ...commonEventAttributes(),
+          policyNumber: searchQuery,
+          docName: doc.metaData.docName,
+          docId: doc.docId,
+        }
+      })
       window.open(newTabUrl, '_blank');
       setLoading(false);
     } catch (error) {
       console.error('Error fetching document URL:', error);
+      await sendEvent({
+        name: "new_tab_open_error",
+        attributes: {
+          userId:UserId,
+          ...commonEventAttributes(),
+          policyNumber: searchQuery,
+          docName: doc.metaData.docName,
+          docId: doc.docId,
+        }
+      })
     } finally {
       setLoading(false);
     }
@@ -477,7 +526,17 @@ export default function Page() {
           <div className={`sidebar left ${leftCollapsed ? "collapsed" : ""}`} style={{ width: !leftCollapsed && `${leftWidth}%` }} >
             <button
               className="toggle-btn"
-              onClick={() => setLeftCollapsed(!leftCollapsed)}
+              onClick={async() => {setLeftCollapsed(!leftCollapsed),
+                await sendEvent({
+                  name: "sidebar_toggle_left",
+                  attributes: {
+                    userId:UserId,
+                    ...commonEventAttributes(),
+                    policyNumber: searchQuery,
+                  }
+                })}
+                
+              }
             >
               {leftCollapsed ? ">" : "<"}
             </button>
@@ -492,6 +551,7 @@ export default function Page() {
                         <SearchWithSuggestions
                           documents={documents}
                           onUpdateRelatedDocuments={handleRelatedDocumentsUpdate}
+                          policyNumber={searchQuery}
                         />
                           <div className="sort-wrapper">
                           <label htmlFor="sortOptions" className="sort-label">
@@ -662,7 +722,17 @@ export default function Page() {
             className={`sidebar right ${rightCollapsed ? "collapsed" : ""}`} style={{ width: !rightCollapsed && `${rightWidth}%` }}>
             <button
               className="toggle-btn-right"
-              onClick={() => setRightCollapsed(!rightCollapsed)}
+              onClick={async() => {
+                setRightCollapsed(!rightCollapsed),
+                await sendEvent({
+                  name: "sidebar_toggle_right",
+                  attributes: {
+                    userId:UserId,
+                    ...commonEventAttributes(),
+                    policyNumber: searchQuery,
+                  }
+                })
+              }}
             >
               {rightCollapsed ? "<" : ">"}
             </button>
