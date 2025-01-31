@@ -54,8 +54,8 @@ export default function Page() {
     title:"No Documents Found",
     msg:"We couldn't find any documents to display. Please try again."
   })
-  const[UserId,setUserId] = useState(sessionStorage.getItem('userId'))
- 
+  const UserId = typeof window !== 'undefined' ? sessionStorage.getItem('userName') : null;
+  
   const styles = {
     viewerContainer: {
       position: 'relative',
@@ -146,7 +146,7 @@ export default function Page() {
       }
       setFilteredDocs([]);
       console.log(sortedDocs, "sorted");
-      await sendEvent({
+      sendEvent({
         name: "search_documents",
         attributes: {
           userId:UserId,
@@ -220,7 +220,7 @@ export default function Page() {
         try {
             const data = await getDocUrl(docId, bucketId);
             manageUrls(data.url, contentType,docName);
-            await sendEvent({
+            sendEvent({
               name: "document_click",
               attributes: {
                 userId:UserId,
@@ -231,7 +231,7 @@ export default function Page() {
               }
             })
         } catch (error) {
-          await sendEvent({
+          sendEvent({
             name: "document_click_error",
             attributes: {
               userId:UserId,
@@ -478,7 +478,7 @@ export default function Page() {
 
       // Create the URL with encrypted parameters
       const newTabUrl = `/docviewer/dockview?doc=${encodeURIComponent(encryptedDoc)}&docUrls=${encodeURIComponent(encryptedDocUrls)}`;
-      await sendEvent({
+      sendEvent({
         name: "new_tab_open",
         attributes: {
           userId:UserId,
@@ -492,7 +492,7 @@ export default function Page() {
       setLoading(false);
     } catch (error) {
       console.error('Error fetching document URL:', error);
-      await sendEvent({
+      sendEvent({
         name: "new_tab_open_error",
         attributes: {
           userId:UserId,
@@ -527,7 +527,7 @@ export default function Page() {
             <button
               className="toggle-btn"
               onClick={async() => {setLeftCollapsed(!leftCollapsed),
-                await sendEvent({
+                sendEvent({
                   name: "sidebar_toggle_left",
                   attributes: {
                     userId:UserId,
@@ -724,7 +724,7 @@ export default function Page() {
               className="toggle-btn-right"
               onClick={async() => {
                 setRightCollapsed(!rightCollapsed),
-                await sendEvent({
+                sendEvent({
                   name: "sidebar_toggle_right",
                   attributes: {
                     userId:UserId,

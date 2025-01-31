@@ -2,13 +2,15 @@
 
 import { useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
+// Import the worker directly
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 import styles from '../styling/pdfViewer.module.css';
 import Loader from './Loader';
 
-// Configure worker
-pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+// Set the worker directly from the import
+pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 export default function PdfViewer({ docUrl , scaleRatio}) {
     const [numPages, setNumPages] = useState(null);

@@ -49,7 +49,7 @@ const SearchWithSuggestions = ({ documents, onUpdateRelatedDocuments, policyNumb
       const relatedDocs = documents.filter(doc => docType === doc.metaData.docType);
       onUpdateRelatedDocuments(relatedDocs); 
     }
-    await sendEvent({
+    sendEvent({
       name: "filter_documents",
       attributes: {
         userId:UserId,
