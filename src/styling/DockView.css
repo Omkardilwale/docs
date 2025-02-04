@@ -67,7 +67,11 @@
   padding: 20px;
   background-color: #f8f9fa;
 }
-
+.text-html-div {
+  height: -webkit-fill-available;
+  margin: 0 20%;
+  width: 780px;
+}
 /* Loading state */
 .loader-container {
   width: 100%;

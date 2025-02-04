@@ -1,5 +1,5 @@
 'use client';
-
+ 
 import { useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 // Import the worker directly
@@ -8,50 +8,45 @@ import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 import styles from '../styling/pdfViewer.module.css';
 import Loader from './Loader';
-
+ 
 // Set the worker directly from the import
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
-
-export default function PdfViewer({ docUrl , scaleRatio}) {
+ 
+export default function PdfViewer({ docUrl }) {
     const [numPages, setNumPages] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [scale, setScale] = useState(scaleRatio);
-
-    // useState(()=>{
-    //     console.log(docUrl)
-    // })
-    
-
-    const minScale = 0.25;
-    const maxScale = 3;
-    const zoomStep = 0.25;
-
+    const [width, setWidth] = useState(300); // Default width in pixels
+ 
+    const minWidth = 100;  // Minimum width in pixels
+    const maxWidth = 2400; // Maximum width in pixels
+    const zoomStep = 100;  // Width change per zoom step
+ 
     function onDocumentLoadSuccess({ numPages }) {
         setNumPages(numPages);
         setLoading(false);
     }
-
+ 
     const handleZoomIn = () => {
-        if (scale < maxScale) {
-            setScale((prevScale) => Math.min(prevScale + zoomStep, maxScale));
+        if (width < maxWidth) {
+            setWidth((prevWidth) => Math.min(prevWidth + zoomStep, maxWidth));
         }
     };
-
+ 
     const handleZoomOut = () => {
-        if (scale > minScale) {
-            setScale((prevScale) => Math.max(prevScale - zoomStep, minScale));
+        if (width > minWidth) {
+            setWidth((prevWidth) => Math.max(prevWidth - zoomStep, minWidth));
         }
     };
-
+ 
     // const preventContextMenu = (e) => {
     //     e.preventDefault();
     //     return false;
     // };
-
+ 
     return (
         <>
             {loading && <Loader />}
-
+ 
             <div className={styles.page} >
                 <main className={styles.main}>
                     <div className={styles.pdfViewer} >
@@ -66,31 +61,34 @@ export default function PdfViewer({ docUrl , scaleRatio}) {
                                         <Page
                                             pageNumber={index + 1}
                                             className={styles.pdfPage}
-                                            scale={scale}
+                                            width={width}
                                             renderTextLayer={true}
                                             renderAnnotationLayer={true}
                                             quality={1}
+                                            scale={3}
                                         />
                                     </div>
                                 ))}
                             </div>
                         </Document>
-
+ 
                         <div className={styles.controls}>
                             <div className={styles.zoomControls}>
                                 <button
                                     className={styles.zoomButton}
                                     onClick={handleZoomOut}
-                                    disabled={scale <= minScale}
+                                    disabled={width <= minWidth}
                                     aria-label="Zoom out"
                                 >
                                     −
                                 </button>
-                                <span className={styles.zoomLevel}>{Math.round(scale * 100)}%</span>
+                                <span className={styles.zoomLevel}>
+                                    {Math.round((width / 800) * 100)}%
+                                </span>
                                 <button
                                     className={styles.zoomButton}
                                     onClick={handleZoomIn}
-                                    disabled={scale >= maxScale}
+                                    disabled={width >= maxWidth}
                                     aria-label="Zoom in"
                                 >
                                     +
@@ -101,6 +99,6 @@ export default function PdfViewer({ docUrl , scaleRatio}) {
                 </main>
             </div>
         </>
-
+ 
     );
 }

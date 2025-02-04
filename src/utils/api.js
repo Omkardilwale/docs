@@ -34,7 +34,7 @@ const fetchDocumentsByCatagory = async (searchQuery, docCode) => {
 
 const login = async(requestBody)=>{
   try{
-    const response = await fetch('https://devintegrationapi.tataaia.com/api/agent/auth/signin/', {
+    const response = await fetch(baseURL, {
       method: 'POST',
       headers: {
         'accept': '*/*',
@@ -51,7 +51,7 @@ const login = async(requestBody)=>{
 }
 
 const sendEvent = async (eventData) => {
-  console.log(eventData)
+  // console.log(eventData)
   try {
     const response = await apiClient.post('/event', {
       events: [

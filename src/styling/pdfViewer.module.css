@@ -1,167 +1,73 @@
 .page {
+  width: 100%;
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: white;
-  padding: 0;
+  padding: 20px;
+  overflow-x: auto;
 }
  
 .main {
-  width: 100%;
-  height: 100vh;
-  max-width: 100%;
-  margin: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
-  background-color: white;
 }
  
 .pdfViewer {
-  max-height: 100vh;
-  width: 100%;
-  overflow-y: auto;
-  background-color: white;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
- 
-.pdfDocument {
-  width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: white;
-  margin: 0;
-  padding: 0;
-  gap: 0;
-  font-size: 0;
+  width: 100%;
 }
  
-.pdfPage {
-  max-width: 100%;
-  height: auto !important;
-  margin: 0 !important;
-  display: block;
-}
- 
-.controls {
-  position: fixed;
-  bottom: 20px;
+.pdfDocument {
+  width: 100%;
   display: flex;
-  gap: 20px;
-  align-items: center;
-  padding: 12px 24px;
-  background-color: white;
-  border-radius: 30px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-  transition: all 0.3s ease;
-}
- 
-.controls:hover {
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
-}
- 
-.controls button {
-  padding: 8px 16px;
-  background-color: #0070f3;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
- 
-.controls button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
- 
-.controls p {
-  margin: 0;
-}
- 
-.zoomControls {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
- 
-.zoomButton {
-  padding: 10px 15px;
-  background-color: #0070f3;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.2s, transform 0.1s;
-  min-width: 40px;
-}
- 
-.zoomButton:hover {
-  background-color: #0051b3;
-  transform: scale(1.05);
-}
- 
-.zoomButton:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
- 
-.zoomLevel {
-  min-width: 60px;
-  text-align: center;
-  font-size: 14px;
-  color: #333;
-}
- 
-/* Responsive adjustments */
-@media screen and (max-width: 768px) {
-  .pdfPage {
-    width: 100% !important;
-  }
-}
- 
-/* Better scrollbar styling */
-.pdfViewer::-webkit-scrollbar {
-  width: 1px;
-}
- 
-.pdfViewer::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
- 
-.pdfViewer::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
- 
-.pdfViewer::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  justify-content: center;
 }
  
 .pagesContainer {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 0px;
+  overflow-x: auto;
+  padding: 20px;
+  width: 100%;
 }
  
 .pageWrapper {
-  margin: 0;
-  padding: 0;
-  margin-bottom: 0px;
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
 }
  
-.pageWrapper:last-child {
-  margin-bottom: 0;
+.controls {
+  position: fixed;
+  bottom: 20px;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
 }
-
-.loading {
-  position: absolute;
-  top: 50%;
-  left: 50%;
+ 
+.zoomControls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+ 
+.zoomButton {
+  padding: 5px 10px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: white;
+}
+ 
+.zoomButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+ 
+.zoomLevel {
+  min-width: 60px;
+  text-align: center;
 }

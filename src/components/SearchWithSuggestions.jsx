@@ -9,7 +9,7 @@ const SearchWithSuggestions = ({ documents, onUpdateRelatedDocuments, policyNumb
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [selectedSuggestions, setSelectedSuggestions] = useState([]);
-  const[UserId,setUserId] = useState(sessionStorage.getItem('userId'))
+  const UserId = typeof window!== 'undefined' ? sessionStorage.getItem('userName'):null;
 
 
   useEffect(()=>{
@@ -49,15 +49,15 @@ const SearchWithSuggestions = ({ documents, onUpdateRelatedDocuments, policyNumb
       const relatedDocs = documents.filter(doc => docType === doc.metaData.docType);
       onUpdateRelatedDocuments(relatedDocs); 
     }
-    sendEvent({
-      name: "filter_documents",
-      attributes: {
-        userId:UserId,
-        ...commonEventAttributes(),
-        docType: docType,
-        policyNumber: policyNumber,
-      }
-    })
+    //  sendEvent({
+    //   name: "filter_documents",
+    //   attributes: {
+    //     userId:UserId,
+    //     ...commonEventAttributes(),
+    //     docType: docType,
+    //     policyNumber: policyNumber,
+    //   }
+    // })
   };
 
   const handleKeyPress = (e) => {

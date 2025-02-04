@@ -24,6 +24,7 @@ import { ImNewTab } from "react-icons/im";
 import CryptoJS from 'crypto-js'; // Import the crypto-js library
 import { encryptData } from "@/utils/encrypt";
 import ToolbarComponent from "@/components/Toolbar";
+import { PiImageBrokenFill } from "react-icons/pi";
 
 export default function Page() {
   const [leftCollapsed, setLeftCollapsed] = useState(false);
@@ -54,8 +55,8 @@ export default function Page() {
     title:"No Documents Found",
     msg:"We couldn't find any documents to display. Please try again."
   })
-  const UserId = typeof window !== 'undefined' ? sessionStorage.getItem('userName') : null;
-  
+  const UserId = typeof window!== 'undefined' ? sessionStorage.getItem('userName'):null;
+ 
   const styles = {
     viewerContainer: {
       position: 'relative',
@@ -146,14 +147,14 @@ export default function Page() {
       }
       setFilteredDocs([]);
       console.log(sortedDocs, "sorted");
-      sendEvent({
-        name: "search_documents",
-        attributes: {
-          userId:UserId,
-          ...commonEventAttributes(),
-          policyNumber: policyNumber,
-        }
-      })
+      //  sendEvent({
+      //   name: "search_documents",
+      //   attributes: {
+      //     userId:UserId,
+      //     ...commonEventAttributes(),
+      //     policyNumber: policyNumber,
+      //   }
+      // })
     } catch (e) {
       console.error("Error fetching documents:", e);
     } finally {
@@ -220,27 +221,27 @@ export default function Page() {
         try {
             const data = await getDocUrl(docId, bucketId);
             manageUrls(data.url, contentType,docName);
-            sendEvent({
-              name: "document_click",
-              attributes: {
-                userId:UserId,
-                ...commonEventAttributes(),
-                docName: docName,
-                docId: docId,
-                policyNumber: searchQuery,
-              }
-            })
+            //  sendEvent({
+            //   name: "document_click",
+            //   attributes: {
+            //     userId:UserId,
+            //     ...commonEventAttributes(),
+            //     docName: docName,
+            //     docId: docId,
+            //     policyNumber: searchQuery,
+            //   }
+            // })
         } catch (error) {
-          sendEvent({
-            name: "document_click_error",
-            attributes: {
-              userId:UserId,
-              ...commonEventAttributes(),
-              docName: docName,
-              docId: docId,
-              policyNumber: searchQuery,
-            }
-          })
+          //  sendEvent({
+          //   name: "document_click_error",
+          //   attributes: {
+          //     userId:UserId,
+          //     ...commonEventAttributes(),
+          //     docName: docName,
+          //     docId: docId,
+          //     policyNumber: searchQuery,
+          //   }
+          // })
             console.error("Error fetching document URL:", error);
         } finally {
             setLoading(false);
@@ -478,30 +479,30 @@ export default function Page() {
 
       // Create the URL with encrypted parameters
       const newTabUrl = `/docviewer/dockview?doc=${encodeURIComponent(encryptedDoc)}&docUrls=${encodeURIComponent(encryptedDocUrls)}`;
-      sendEvent({
-        name: "new_tab_open",
-        attributes: {
-          userId:UserId,
-          ...commonEventAttributes(),
-          policyNumber: searchQuery,
-          docName: doc.metaData.docName,
-          docId: doc.docId,
-        }
-      })
+      //  sendEvent({
+      //   name: "new_tab_open",
+      //   attributes: {
+      //     userId:UserId,
+      //     ...commonEventAttributes(),
+      //     policyNumber: searchQuery,
+      //     docName: doc.metaData.docName,
+      //     docId: doc.docId,
+      //   }
+      // })
       window.open(newTabUrl, '_blank');
       setLoading(false);
     } catch (error) {
       console.error('Error fetching document URL:', error);
-      sendEvent({
-        name: "new_tab_open_error",
-        attributes: {
-          userId:UserId,
-          ...commonEventAttributes(),
-          policyNumber: searchQuery,
-          docName: doc.metaData.docName,
-          docId: doc.docId,
-        }
-      })
+      //  sendEvent({
+      //   name: "new_tab_open_error",
+      //   attributes: {
+      //     userId:UserId,
+      //     ...commonEventAttributes(),
+      //     policyNumber: searchQuery,
+      //     docName: doc.metaData.docName,
+      //     docId: doc.docId,
+      //   }
+      // })
     } finally {
       setLoading(false);
     }
@@ -526,15 +527,15 @@ export default function Page() {
           <div className={`sidebar left ${leftCollapsed ? "collapsed" : ""}`} style={{ width: !leftCollapsed && `${leftWidth}%` }} >
             <button
               className="toggle-btn"
-              onClick={async() => {setLeftCollapsed(!leftCollapsed),
-                sendEvent({
-                  name: "sidebar_toggle_left",
-                  attributes: {
-                    userId:UserId,
-                    ...commonEventAttributes(),
-                    policyNumber: searchQuery,
-                  }
-                })}
+              onClick={() => {setLeftCollapsed(!leftCollapsed)}
+                //  sendEvent({
+                //   name: "sidebar_toggle_left",
+                //   attributes: {
+                //     userId:UserId,
+                //     ...commonEventAttributes(),
+                //     policyNumber: searchQuery,
+                //   }
+                // })}
                 
               }
             >
@@ -652,7 +653,7 @@ export default function Page() {
                         <div className="viewer-container">
                             <TiffViewer tiffUrl={docItem.url} scale={docItem.zoomLevel * (docUrls.length === 1 ? 1.5 : 0.5)} rotationAngle={docItem.rotationAngle || 0}/>
                         </div>
-                    ) : (docItem.contentType === "image/jpeg" || docItem.contentType === "image/png") ? (
+                    ) : (docItem.contentType === "image/jpeg" || docItem.contentType === "image/png" || docItem.contentType === "image/jpg") ? (
                         <div className="viewer-container">
                             <div className="zoom-controls">
                                 <button onClick={() => handleZoomOut(isSplitView ? index:docUrls.length===1?0 :docUrls.length===2?1:null)} className="zoom-btn">-</button>
@@ -678,41 +679,28 @@ export default function Page() {
                             </Frame>
                         </div>
                     ) : docItem.contentType === "application/pdf" ? (
-                        <PdfViewer docUrl={docItem.url} scaleRatio={!isSplitView ? 1.5 : 0.5}/>
+                      <PdfViewer docUrl={docItem.url}/>
+
                     ) : docItem.contentType.startsWith("video/") ? (
                         <embed src={docItem.url !== "" ? `${docItem.url}#toolbar=0` : null} 
+                               width="100%" 
+                               height="100%" />
+                    ) : docItem.contentType ==="text/html" ?(
+                      <embed src={docItem.url !== "" ? `${docItem.url}#toolbar=0&navpanes=0&scrollbar=1` : null} 
                                type="application/pdf" 
                                width="100%" 
                                height="100%" />
-                    ) : (
-                        <div className="viewer-container">
-                            <div className="zoom-controls">
-                                <button onClick={() => handleZoomOut(isSplitView ? index:docUrls.length===1?0 :docUrls.length===2?1:null)} className="zoom-btn">-</button>
-                                <button onClick={() => handleZoomReset(isSplitView ? index:docUrls.length===1?0 :docUrls.length===2?1:null)} className="zoom-btn">Reset</button>
-                                <button onClick={() => handleZoomIn(isSplitView ? index:docUrls.length===1?0 :docUrls.length===2?1:null)} className="zoom-btn">+</button>
-                                <button onClick={() => handleRotateLeft(isSplitView ? index:docUrls.length===1?0 :docUrls.length===2?1:null)} className="zoom-btn">Rotate Left</button>
-                                <button onClick={() => handleRotateRight(isSplitView ? index:docUrls.length===1?0 :docUrls.length===2?1:null)} className="zoom-btn">Rotate Right</button>
-                                <span>{Math.round(docItem.zoomLevel * 100)}%</span>
-                            </div>
-                            <Frame>
-                                <img
-                                    // onContextMenu={handleContext}
-                                    draggable="false"
-                                    style={{
-                                        width: "-webkit-fill-available",
-                                        transform: `scale(${docItem.zoomLevel}) rotate(${docItem.rotationAngle || 0}deg)`,
-                                        transformOrigin: 'center',
-                                        transition: 'transform 0.2s ease-in-out'
-                                    }}
-                                    className="jpg-document"
-                                    src={docItem.url}
-                                />
-                            </Frame>
-                        </div>
-                    )}
+                    ):docItem.contentType ==="audio/mpeg" || docItem.contentType ==="audio/mp4" || contentType.startsWith('audio/')?(
+                            <audio controls>
+                              <source src={docItem.url !== "" ? `${docItem.url}` : null}
+                                type="audio/mpeg"
+                              />
+                            </audio>
+
+                    ):<PiImageBrokenFill/>
+                    }
                 </div>
             ))
- 
               :
               <div className="content-blank"><HiDocument/></div>
           )}
@@ -723,15 +711,15 @@ export default function Page() {
             <button
               className="toggle-btn-right"
               onClick={async() => {
-                setRightCollapsed(!rightCollapsed),
-                sendEvent({
-                  name: "sidebar_toggle_right",
-                  attributes: {
-                    userId:UserId,
-                    ...commonEventAttributes(),
-                    policyNumber: searchQuery,
-                  }
-                })
+                setRightCollapsed(!rightCollapsed)
+                //  sendEvent({
+                //   name: "sidebar_toggle_right",
+                //   attributes: {
+                //     userId:UserId,
+                //     ...commonEventAttributes(),
+                //     policyNumber: searchQuery,
+                //   }
+                // })
               }}
             >
               {rightCollapsed ? "<" : ">"}

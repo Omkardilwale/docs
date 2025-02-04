@@ -71,57 +71,57 @@ export default function Login() {
           console.log("tokens",data)
           Cookies.set('accessToken' , data.accessToken,{secure:true,sameSite:'Strict'});
           Cookies.set('refreshToken' , data.refreshToken,{secure:true,sameSite:'Strict'});
-          sendEvent({
-            name: "login_success",
-            attributes: {
-              userId:UserId,
-              role: dropdownSelection,
-              ...commonEventAttributes(),
-            }
-          })
+          //  sendEvent({
+          //   name: "login_success",
+          //   attributes: {
+          //     userId:UserId,
+          //     role: dropdownSelection,
+          //     ...commonEventAttributes(),
+          //   }
+          // })
           router.push('/document-viewer');
         } else {
-          sendEvent({
-            name: "login_failed",
-            attributes: {
-              userId:UserId,
-              role: dropdownSelection,
-              ...commonEventAttributes(),
-            }
-          })
+          //  sendEvent({
+          //   name: "login_failed",
+          //   attributes: {
+          //     userId:UserId,
+          //     role: dropdownSelection,
+          //     ...commonEventAttributes(),
+          //   }
+          // })
           setError(data._status?.code === 0 ? 'Invalid credentials' : 'Login failed');
         }
         setLoader(false);
 
 
       }else{
-        const accessToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJpYXQiOjE2ODcyNzg3OTB9.dPBBnz2H6tfWZ4HqCy45L3SLI-elRHPeP4aHw2mJR3e3n1tl1Yi48E3gspBpExjpYqpErartaGVkso-9WjAqoQ"
+        const accessToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYXBwdXNlciIsInBhcnR5TmFtZSI6ImFwcHVzZXIiLCJuYW1lIjoiYXBwdXNlciIsInNvdXJjZSI6ImwyaSIsImF1ZCI6InNlcnZpY2VzcGxhdGZvcm0udGF0YWFpYS5jb20iLCJpc3MiOiJzZXJ2aWNlc3BsYXRmb3JtLnRhdGFhaWEuY29tIiwiaWF0IjoxNzIzMjk0MDc5fQ.KujvV_-QeCIBg8kCaRJbhOV9f8O1m32JQNFs1fBuzBTq30nFZdh6gHkme-FXGFnaDpDohDitIWfI8YsclX-yvfSga5IBOwTRTl_GvdbE3Eu37jClKO3VT95PE6vzm_Xui8RiNUmmbCO6HT9KY2W6h_9hR2Q1PVOs05H3TL4zPgzl6CPe4K4n74uhLegCWh7BQQGM2kJtw9K2R6OWvhQyoXNJYgLc8fzqMC1UITBXB02SWvUmitxH6dYGkccv8WdyI8_J7LSk71bArxRbTqc17oOXeMfNN4gNtj2b4icHLizIotiWxP_qUG3L72rJV0GZrsZ2-Gd4vEyI4PB_fBMlAQ"
         const refreshToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MTU5OTAiLCJ1c2VySWQiOiI2MTU5OTAiLCJyb2xlIjoiQUdFTlQiLCJyb2xlVHlwZSI6IkVMUCIsInVzZXJHcm91cCI6InNpZGRoaSIsImNoYW5uZWwiOiJBR0NZIiwiZ3JvdXBJZCI6bnVsbCwiYWRkaXRpb25hbFJvbGUiOm51bGwsImFkZGl0aW9uYWxSb2xlVHlwZSI6bnVsbCwic291cmNlIjoid2ViIiwibG9naW5Nb2RlIjoiUGFzc3dvcmQiLCJkZXNpZ25hdGlvbiI6IkVMIiwiaXNzIjoiYWNtZSIsImF1ZCI6ImFjbWVBdWQiLCJpYXQiOjE3MzYzMzMyNjUsImV4cCI6MTczNjM3NjQ2NX0.NWxGH3Da9gmE3GZe10q2OEuYAoC2ErofmXQPKfCxg6DtFrJwA715fV5Rkc3h4aG34--eFThOOhy0cFiLjTa3Lw"
      
         Cookies.set('accessToken' , accessToken,{secure:true,sameSite:'Strict'});
         Cookies.set('refreshToken' , refreshToken,{secure:true,sameSite:'Strict'});
-        sendEvent({
-          name: "login_success",
-          attributes: {
-            userId:UserId,
-            role: dropdownSelection,
-            ...commonEventAttributes(),
-          }
-        })
+        //  sendEvent({
+        //   name: "login_success",
+        //   attributes: {
+        //     userId:UserId,
+        //     role: dropdownSelection,
+        //     ...commonEventAttributes(),
+        //   }
+        // })
         router.push('/document-viewer');
 
         setLoader(false);
 
       }
     } catch (err) {
-      sendEvent({
-        name: "login_error",
-        attributes: {
-          userId:UserId,
-          role: dropdownSelection,
-          ...commonEventAttributes(),
-        }
-      })
+      //  sendEvent({
+      //   name: "login_error",
+      //   attributes: {
+      //     userId:UserId,
+      //     role: dropdownSelection,
+      //     ...commonEventAttributes(),
+      //   }
+      // })
       setError(`Error: ${err.message}`);
       setLoader(false);
     }

@@ -7,11 +7,12 @@ import TiffViewer from '@/components/TiffViewer';
 import Loader from '@/components/Loader';
 import styles from '../styling/DockView.css';
 import { FaSearchPlus, FaSearchMinus, FaSync, FaRedo } from 'react-icons/fa'; // Importing zoom in, zoom out, rotate, and reset icons
+import { PiImageBrokenFill } from 'react-icons/pi';
 
 const DockView = () => {
   const [doc, setDoc] = useState(null);
   const [docUrls, setDocUrls] = useState([]);
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(0.5);
   const [rotation, setRotation] = useState(0);
 
   useEffect(() => {
@@ -45,6 +46,7 @@ const DockView = () => {
 
   const handleZoomOut = () => {
     setScale(scale - 0.1);
+    console.log(scale-0.1)
   };
 
   const handleRotate = () => {
@@ -65,7 +67,7 @@ const DockView = () => {
               <p className="doc-text-middle">
                 {docItem.docName}
               </p>
-              {docItem.contentType === "image/jpeg" || docItem.contentType === "image/png" ? (
+              {(docItem.contentType === "image/jpeg" || docItem.contentType === "image/png" || docItem.contentType === "image/jpg")? (
                 <div style={{ display: 'flex', gap: '10px' }}>
                   <button onClick={handleZoomIn} title="Zoom In">
                     <FaSearchPlus />
@@ -83,10 +85,12 @@ const DockView = () => {
               ) : null}
             </div>
             {docItem.contentType === "application/pdf" ? (
-              <PdfViewer docUrl={docItem.url} scaleRatio={2} />
+             
+             <PdfViewer docUrl={docItem.url}/>
+
             ) : docItem.contentType === "image/tiff" ?(
               <TiffViewer docUrl={docItem.url} />
-            ): docItem.contentType === "image/jpeg" ? (
+            ): docItem.contentType === "image/jpeg" || docItem.contentType === "image/jpg"? (
               <div style={{ overflow: 'hidden', maxWidth: '100%', position: 'relative', height: '100vh', overflowY: 'auto' }}>
                 <img 
                   src={docItem.url} 
@@ -107,11 +111,24 @@ const DockView = () => {
                        type="application/pdf" 
                        width="100%" 
                        height="100%" />
-            ) : (
-                <div className="unsupported-format">
-                    Unsupported document format: {docItem.contentType}
-                </div>
-            )}
+            ) : docItem.contentType ==="text/html" ?(
+              <div className='text-html-div'>
+                <embed src={docItem.url !== "" ? `${docItem.url}#toolbar=0&navpanes=0&scrollbar=1` : null}
+                          type="application/pdf"
+                          width="100%"
+                          height="100%"
+                        />
+              </div>
+                        
+            ):docItem.contentType ==="audio/mpeg" || docItem.contentType ==="audio/mp4" || contentType.startsWith('audio/')?(
+              <audio controls>
+                <source src={docItem.url !== "" ? `${docItem.url}` : null}
+                  type="audio/mpeg"
+                />
+              </audio>
+
+            ):<PiImageBrokenFill/>
+            }
           </div>
         ))
       ) : (
