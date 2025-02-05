@@ -3,8 +3,8 @@ import '../styling/overlayloader.css'
 
 const OverlayLoader = () => {
     return (
-        <div class="overlay">
-            <div class="loader"></div>
+        <div className="overlay">
+            <div className="loader"></div>
         </div>
     )
 }

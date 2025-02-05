@@ -15,7 +15,7 @@ const Header = () => {
     useEffect(() => {
         setUserCreds({
             userName: sessionStorage.getItem("userName"),
-            password: sessionStorage.getItem("password")
+            // password: sessionStorage.getItem("password")
         });
     }, []);
     const logout = () => {

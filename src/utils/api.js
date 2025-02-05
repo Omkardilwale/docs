@@ -34,18 +34,18 @@ const fetchDocumentsByCatagory = async (searchQuery, docCode) => {
 
 const login = async(requestBody)=>{
   try{
-    const response = await fetch(baseURL, {
+    const response = await fetch('https://devintegrationapi.tataaia.com/api/agent/auth/employee/signin', {
       method: 'POST',
       headers: {
         'accept': '*/*',
-        'content-type': 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(requestBody),
     });
     
     return response;
   }catch(error){
-    console.error('Error fetching documents by category:', error);
+    console.error('Error in login:', error);
     throw error;
   }
 }
